@@ -8,7 +8,6 @@
 
 #include "DataFormats/TrackCandidate/interface/TrackCandidate.h"
 #include "DataFormats/TrackingRecHit/interface/TrackingRecHitFwd.h"
-#include "DataFormats/TrackReco/interface/HelixParameters.h"
 
 #include "TrackingTools/PatternTools/interface/TrajectoryFitter.h"
 #include "TrackingTools/TrajectoryState/interface/TrajectoryStateOnSurface.h"
@@ -105,7 +104,7 @@ void TrackProducerAlgorithm::run(const TrackingGeometry * theG,
 	GlobalVector p = gp.momentum();
 	const CartesianTrajectoryError& cte = tsos.cartesianError();
 	AlgebraicSymMatrix m = cte.matrix();
-	math::Error<6>::type cov;
+	math::Error<6> cov;
 	for( int i = 0; i < 6; ++i )
 	  for( int j = 0; j <= i; ++j )
 	    cov( i, j ) = m.fast( i + 1 , j + 1 );
@@ -114,6 +113,7 @@ void TrackProducerAlgorithm::run(const TrackingGeometry * theG,
 	edm::LogInfo("RecoTracker/TrackProducer") << " RESULT Momentum "<< p<<"\n";
 	edm::LogInfo("RecoTracker/TrackProducer") << " RESULT Vertex "<< v<<"\n";
 
+		
 	//build the Track(chiSquared, ndof, found, invalid, lost, q, vertex, momentum, covariance)
 	theTrack = new reco::Track(theTraj->chiSquared(), 
 				   int(ndof),//FIXME fix weight() in TrackingRecHit 
