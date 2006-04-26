@@ -1,17 +1,3 @@
-  es_module p1 = AnalyticalPropagatorESProducer
-  {
-    string ComponentName = "AnalyticalPropagator"   
-    string PropagationDirection = "alongMomentum"
-  }
-
-  es_module p2 = AnalyticalPropagatorESProducer
-  {
-    string ComponentName = "AnalyticalPropagatorOpposite"   
-    string PropagationDirection = "oppositeToMomentum"
-  }
-
-
-  
   es_module = KFUpdatorESProducer
   {
     string ComponentName = "KFUpdator"   
@@ -27,7 +13,7 @@
   es_module = KFTrajectoryFitterESProducer 
   {
     string ComponentName = "KFFitter"   
-    string  Propagator = "AnalyticalPropagator" 
+    string  Propagator = "PropagatorWithMaterial" 
     string Updator = "KFUpdator"
     string Estimator = "Chi2"
   }
@@ -35,7 +21,7 @@
   es_module = KFTrajectorySmootherESProducer 
   {
     string ComponentName = "KFSmoother"   
-    string Propagator = "AnalyticalPropagatorOpposite" 
+    string Propagator = "PropagatorWithMaterialOpposite" 
     string Updator = "KFUpdator"
     string Estimator = "Chi2"
 
@@ -48,9 +34,6 @@
     string Smoother = "KFSmoother"
 
   }
-#
-# Not using these .... but you could!
-#
 
   es_module mat1 = PropagatorWithMaterialESProducer {
     string ComponentName = "PropagatorWithMaterial"
