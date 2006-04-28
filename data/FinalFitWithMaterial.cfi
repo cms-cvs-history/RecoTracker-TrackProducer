@@ -45,3 +45,9 @@
     string PropagationDirection = "oppositeToMomentum"	
     double Mass = 0.105
   }
+ module TrackProducer = TrackProducer 
+  {
+    string Fitter = "KFFittingSmoother"   
+    string Propagator = "AnalyticalPropagator" 
+    string src = "trackcandidates"
+  }                                                                                                                                                           
