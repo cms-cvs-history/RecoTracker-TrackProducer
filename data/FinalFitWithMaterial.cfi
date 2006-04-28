@@ -48,6 +48,6 @@
  module TrackProducer = TrackProducer 
   {
     string Fitter = "KFFittingSmoother"   
-    string Propagator = "AnalyticalPropagator" 
+    string Propagator = "PropagatorWithMaterial" 
     string src = "trackcandidates"
   }                                                                                                                                                           
