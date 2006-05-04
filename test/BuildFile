@@ -2,7 +2,6 @@
 <use name=FWCore/Framework>
 <use name=DataFormats/TrackReco>
 <use name=clhep>
-<use name=RecoTracker/>
 <use name=FWCore/Framework>
 <use name=Foundation/PluginManager>
 <use name=FWCore/ParameterSet>
