@@ -2,5 +2,5 @@ module CTFFinalFitAnalytical = TrackProducer
 {
   string Fitter = "KFFittingSmoother"   
   string Propagator = "AnalyticalPropagator" 
-  string src = "CTFTrackCandidates"
+  string src = "CkfTrackCandidates"
 }                                                                                                                                                           
