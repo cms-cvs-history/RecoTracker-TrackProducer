@@ -1,0 +1,6 @@
+module RSFinalFitWithMaterial = TrackProducer 
+{
+  string Fitter = "KFFittingSmoother"   
+  string Propagator = "PropagatorWithMaterial" 
+  string src = "RoadSearchTrackCandidates"
+}                                                                                                                                                           
