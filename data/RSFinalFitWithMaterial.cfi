@@ -1,4 +1,4 @@
-module RSFinalFitWithMaterial = TrackProducer 
+module RSWMaterial = TrackProducer 
 {
   string Fitter = "KFFittingSmoother"   
   string Propagator = "PropagatorWithMaterial" 

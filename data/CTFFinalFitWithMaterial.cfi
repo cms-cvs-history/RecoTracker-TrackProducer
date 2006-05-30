@@ -1,4 +1,4 @@
-module CTFFinalFitWithMaterial = TrackProducer 
+module CTFWMaterial = TrackProducer 
 {
   string Fitter = "KFFittingSmoother"   
   string Propagator = "PropagatorWithMaterial" 
