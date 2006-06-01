@@ -3,4 +3,5 @@ module RSAnalytical = TrackProducer
   string Fitter = "KFFittingSmoother"   
   string Propagator = "AnalyticalPropagator" 
   string src = "RoadSearchTrackCandidates"
+  string TTRHBuilder         =  "WithTrackAngle"
 }                                                                                                                                                           
