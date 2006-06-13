@@ -1,0 +1,7 @@
+module TrackRefitter = TrackRefitter 
+{
+  string Fitter = "KFFittingSmoother"   
+  string Propagator = "PropagatorWithMaterial" 
+  string src = "CTFWMaterial"
+  string TTRHBuilder = "WithTrackAngle"
+}
