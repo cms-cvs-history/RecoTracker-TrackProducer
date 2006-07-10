@@ -54,4 +54,5 @@
     string Fitter = "KFFittingSmoother"   
     string Propagator = "AnalyticalPropagator" 
     string src = "trackcandidates"
-  }                                                                                                                                                           
+    string alias = "FinalFitAnalytical"
+  }

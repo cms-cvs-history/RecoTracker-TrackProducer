@@ -3,6 +3,7 @@ module CTFWMaterial = TrackProducer
   string Fitter = "KFFittingSmoother"   
   string Propagator = "PropagatorWithMaterial" 
   string src = "CkfTrackCandidates"
+  string alias = "CTFWMaterial"
   string TTRHBuilder       =   "WithTrackAngle"
 
 }                                                                                                                                                           

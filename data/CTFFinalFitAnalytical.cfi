@@ -3,6 +3,7 @@ module CTFAnalytical = TrackProducer
   string Fitter = "KFFittingSmoother"   
   string Propagator = "AnalyticalPropagator" 
   string src = "CkfTrackCandidates"
+  string alias = "CTFAnalytical"
   string TTRHBuilder       =   "WithTrackAngle"
 
 }                                                                                                                                                           
