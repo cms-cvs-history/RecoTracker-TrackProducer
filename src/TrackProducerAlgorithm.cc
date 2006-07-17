@@ -135,7 +135,7 @@ void TrackProducerAlgorithm::runWithTrack(const TrackingGeometry * theG,
 	  }
 	} else hits=tmp;
 	
-	reco::TransientTrack theTT(*theT);
+	reco::TransientTrack theTT(*theT,thePropagator->magneticField() );
 	
 	//       TrajectoryStateOnSurface theTSOS=theTT.impactPointState();
 	//       theTSOS.rescaleError(100);
