@@ -34,6 +34,7 @@ include "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
 
 # stripCPE
 include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
+   include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
 # pixelCPE
 include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
