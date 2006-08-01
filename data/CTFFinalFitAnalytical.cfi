@@ -1,9 +1,9 @@
-module CTFAnalytical = TrackProducer 
+module ctfAnalyticalTracks = TrackProducer 
 {
   string Fitter = "KFFittingSmoother"   
   string Propagator = "AnalyticalPropagator" 
-  string src = "CkfTrackCandidates"
-  string alias = "CTFAnalytical"
+  string src = "ckfTrackCandidates"
+  string alias = "ctfAnalyticalTracks"
   string TTRHBuilder       =   "WithTrackAngle"
 
 }                                                                                                                                                           

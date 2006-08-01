@@ -1,8 +1,8 @@
-module RSAnalytical = TrackProducer 
+module rsAnalyticalTracks = TrackProducer 
 {
   string Fitter = "KFFittingSmoother"   
   string Propagator = "AnalyticalPropagator" 
-  string src = "RoadSearchTrackCandidates"
-  string alias = "RSAnalytical"
+  string src = "rsTrackCandidates"
+  string alias = "rsAnalyticalTracks"
   string TTRHBuilder         =  "WithTrackAngle"
 }                                                                                                                                                           

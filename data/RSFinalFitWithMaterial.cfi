@@ -1,9 +1,9 @@
-module RSWMaterial = TrackProducer 
+module rsWithMaterialTracks = TrackProducer 
 {
   string Fitter = "KFFittingSmoother"   
   string Propagator = "PropagatorWithMaterial" 
-  string src = "RoadSearchTrackCandidates"
-  string alias = "RSWMaterial"
+  string src = "rsTrackCandidates"
+  string alias = "rsWithMaterialTracks"
   string TTRHBuilder          =  "WithTrackAngle"
 
 }                                                                                                                                                           
