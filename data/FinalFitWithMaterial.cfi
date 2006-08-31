@@ -50,5 +50,4 @@
     string Fitter = "KFFittingSmoother"   
     string Propagator = "PropagatorWithMaterial" 
     string src = "trackcandidates"
-    string alias = "FinalFitWMaterial"
   }

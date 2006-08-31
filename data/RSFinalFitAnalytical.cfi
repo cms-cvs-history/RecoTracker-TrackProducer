@@ -3,6 +3,5 @@ module rsAnalyticalTracks = TrackProducer
   string Fitter = "KFFittingSmoother"   
   string Propagator = "AnalyticalPropagator" 
   string src = "rsTrackCandidates"
-  string alias = "rsAnalyticalTracks"
   string TTRHBuilder         =  "WithTrackAngle"
 }                                                                                                                                                           

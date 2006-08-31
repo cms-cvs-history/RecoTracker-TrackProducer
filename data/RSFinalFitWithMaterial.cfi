@@ -3,7 +3,6 @@ module rsWithMaterialTracks = TrackProducer
   string Fitter = "KFFittingSmoother"   
   string Propagator = "PropagatorWithMaterial" 
   string src = "rsTrackCandidates"
-  string alias = "rsWithMaterialTracks"
   string TTRHBuilder          =  "WithTrackAngle"
 
 }                                                                                                                                                           
