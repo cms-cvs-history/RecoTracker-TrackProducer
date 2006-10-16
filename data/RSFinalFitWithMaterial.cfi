@@ -4,5 +4,5 @@ module rsWithMaterialTracks = TrackProducer
   string Propagator = "PropagatorWithMaterial" 
   string src = "rsTrackCandidates"
   string TTRHBuilder          =  "WithTrackAngle"
-
+  bool TrajectoryInEvent = false
 }                                                                                                                                                           

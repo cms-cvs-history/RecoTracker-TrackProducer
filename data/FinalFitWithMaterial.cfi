@@ -50,4 +50,5 @@
     string Fitter = "KFFittingSmoother"   
     string Propagator = "PropagatorWithMaterial" 
     string src = "trackcandidates"
+    bool TrajectoryInEvent = false
   }

@@ -4,5 +4,5 @@ module ctfAnalyticalTracks = TrackProducer
   string Propagator = "AnalyticalPropagator" 
   string src = "ckfTrackCandidates"
   string TTRHBuilder       =   "WithTrackAngle"
-
+  bool TrajectoryInEvent = false
 }                                                                                                                                                           
