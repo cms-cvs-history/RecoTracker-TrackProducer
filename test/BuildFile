@@ -23,3 +23,9 @@
   <use name=FWCore/Framework>
   <flags SEAL_PLUGIN_NAME="TrackValidator">
 </library>
+
+<library file=TrajectoryAnalyzer.cc name=TrajectoryAnalyzer>
+  <use name=FWCore/Framework>
+  <use name=TrackingTools/PatternTools>
+  <flags SEAL_PLUGIN_NAME="TrajectoryAnalyzer">
+</library>
