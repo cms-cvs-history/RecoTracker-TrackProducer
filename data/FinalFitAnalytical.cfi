@@ -55,4 +55,5 @@
     string Propagator = "AnalyticalPropagator" 
     string src = "trackcandidates"
     bool TrajectoryInEvent = false
+    int32 numberOfTrackParameters = 5
   }

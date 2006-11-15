@@ -1,8 +1,9 @@
 module rsAnalyticalTracks = TrackProducer 
 {
-  string Fitter = "KFFittingSmoother"   
-  string Propagator = "AnalyticalPropagator" 
-  string src = "rsTrackCandidates"
-  string TTRHBuilder         =  "WithTrackAngle"
-  bool TrajectoryInEvent = false
+    string Fitter = "KFFittingSmoother"   
+    string Propagator = "AnalyticalPropagator" 
+    string src = "rsTrackCandidates"
+    string TTRHBuilder         =  "WithTrackAngle"
+    bool TrajectoryInEvent = false
+    int32 numberOfTrackParameters = 5
 }                                                                                                                                                           
