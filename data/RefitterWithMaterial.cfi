@@ -1,9 +1,9 @@
 module TrackRefitter = TrackRefitter 
 {
-    string Fitter = "KFFittingSmoother"   
-    string Propagator = "PropagatorWithMaterial" 
-    string src = "ctfWithMaterialTracks"
-    string TTRHBuilder = "WithTrackAngle"
-    bool TrajectoryInEvent = false
-    int32 numberOfTrackParameters = 5
+  string Fitter = "KFFittingSmoother"   
+  string Propagator = "PropagatorWithMaterial" 
+  string src = "ctfWithMaterialTracks"
+  string producer = ""
+  string TTRHBuilder = "WithTrackAngle"
+  bool TrajectoryInEvent = false
 }

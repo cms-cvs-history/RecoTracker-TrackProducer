@@ -50,6 +50,7 @@ module TrackProducer = TrackProducer
     string Fitter = "KFFittingSmoother"   
     string Propagator = "PropagatorWithMaterial" 
     string src = "trackcandidates"
+    string producer = ""
     bool TrajectoryInEvent = false
     int32 numberOfTrackParameters = 5
 }

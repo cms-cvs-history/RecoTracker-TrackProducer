@@ -54,6 +54,7 @@
     string Fitter = "KFFittingSmoother"   
     string Propagator = "AnalyticalPropagator" 
     string src = "trackcandidates"
+    string producer = ""
     bool TrajectoryInEvent = false
     int32 numberOfTrackParameters = 5
   }
