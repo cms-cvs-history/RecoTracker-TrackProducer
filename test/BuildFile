@@ -21,6 +21,8 @@
 
 <library file=TrackValidator.cc name=TrackValidator>
   <use name=FWCore/Framework>
+  <use name=TrackingTools/TransientTrack>
+  <use name=TrackingTools/PatternTools>
   <flags SEAL_PLUGIN_NAME="TrackValidator">
 </library>
 
