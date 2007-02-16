@@ -5,5 +5,5 @@ module ctfWithMaterialTracks = TrackProducer
   string src = "ckfTrackCandidates"
   string producer = ""
   string TTRHBuilder       =   "WithTrackAngle"
-  bool TrajectoryInEvent = false
+  bool TrajectoryInEvent = true 
 }                                                                                                                                                           
