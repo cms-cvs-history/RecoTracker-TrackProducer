@@ -1,14 +1,11 @@
 # magnetic field
-#include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
+include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/uniformMagneticField.cfi"
 
 # cms geometry
-#include "Geometry/TrackerRecoData/data/trackerRecoGeometryXML.cfi"
-#include "Geometry/CMSCommonData/data/cmsIdealGeometryXML.cfi"
 include "Geometry/CMSCommonData/data/cmsMTCCGeometryXML.cfi"
 
 # tracker geometry
-#include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
 include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
 
 # tracker numbering
@@ -34,14 +31,17 @@ include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
 
 # PropagatorWithMaterialESProducer
 include "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
+
 # stripCPE
 include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
-   include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 
 # pixelCPE
 include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
+
 #TransientTrackingBuilder
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
 
-# TrackProducer
-include "RecoTracker/TrackProducer/data/RSFinalFitWithMaterial.cfi"
+# include TrackProducer and clone with new module label
+module  rsWithMaterialTracksMTCC                = rsWithMaterialTracks from "RecoTracker/TrackProducer/data/RSFinalFitWithMaterial.cfi"
+replace rsWithMaterialTracksMTCC.src            = "rsTrackCandidatesMTCC"

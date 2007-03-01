@@ -1,9 +1,9 @@
 module ctfAnalyticalTracks = TrackProducer 
 {
-  string Fitter = "KFFittingSmoother"   
-  string Propagator = "AnalyticalPropagator" 
-  string src = "ckfTrackCandidates"
-  string producer = ""
-  string TTRHBuilder       =   "WithTrackAngle"
-  bool TrajectoryInEvent = false
+  string Fitter          = "KFFittingSmoother"   
+  string Propagator      = "AnalyticalPropagator" 
+  string src             = "ckfTrackCandidates"
+  string producer        = ""
+  string TTRHBuilder     = "WithTrackAngle"
+  bool TrajectoryInEvent = true
 }                                                                                                                                                           
