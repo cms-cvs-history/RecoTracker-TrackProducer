@@ -32,7 +32,8 @@ es_module = KFFittingSmootherESProducer
     string ComponentName = "KFFittingSmoother"   
     string  Fitter = "KFFitter" 
     string Smoother = "KFSmoother"
-    
+    double EstimateCut = -1 	 
+    int32 MinNumberOfHits = 5
 }
 
 es_module mat1 = PropagatorWithMaterialESProducer {
