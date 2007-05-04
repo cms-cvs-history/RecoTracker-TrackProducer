@@ -162,6 +162,7 @@ void TrackProducerAlgorithm::runWithTrack(const TrackingGeometry * theG,
 
 	//=====  the hits are in the same order as they were in the track::extra.        
 	bool ok = buildTrack(theFitter,thePropagator,algoResults, hits, theInitialStateForRefitting, *seed, ndof);
+	delete seed;
 	if(ok) cont++;
       }catch ( CMSexception & e){
 	edm::LogError("TrackProducer") << "Genexception1: " << e.explainSelf() <<"\n";      
