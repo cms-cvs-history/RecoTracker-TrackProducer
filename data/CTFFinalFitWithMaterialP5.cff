@@ -1,6 +1,6 @@
 # magnetic field
 #include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
-include "MagneticField/Engine/data/uniformMagneticField.cfi"
+include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
 
 # cms geometry
 #include "Geometry/TrackerRecoData/data/trackerRecoGeometryXML.cfi"
@@ -26,9 +26,9 @@ include "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
 
 # KFFittingSmootherESProducer
 #include "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
-es_module KFFittingSmootherTIFTOB = KFFittingSmoother from "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
-replace KFFittingSmootherTIFTOB.ComponentName = "KFFittingSmootherTIFTOB"
-replace KFFittingSmootherTIFTOB.MinNumberOfHits = 4
+es_module KFFittingSmootherP5 = KFFittingSmoother from "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+replace KFFittingSmootherP5.ComponentName = "KFFittingSmootherP5"
+replace KFFittingSmootherP5.MinNumberOfHits = 4	
 
 # PropagatorWithMaterialESProducer
 include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
@@ -45,6 +45,6 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 
 # TrackProducer
-module ctfWithMaterialTracksTIFTOB = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
-replace ctfWithMaterialTracksTIFTOB.src = "ckfTrackCandidatesTIFTOB"
-replace ctfWithMaterialTracksTIFTOB.Fitter = "KFFittingSmootherTIFTOB"
+module ctfWithMaterialTracksP5 = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
+replace ctfWithMaterialTracksP5.src = "ckfTrackCandidatesP5"
+replace ctfWithMaterialTracksP5.Fitter = "KFFittingSmootherP5"

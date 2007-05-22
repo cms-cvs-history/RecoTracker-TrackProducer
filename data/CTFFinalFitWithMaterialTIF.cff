@@ -1,5 +1,5 @@
 # magnetic field
-include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
+#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/uniformMagneticField.cfi"
 
 # cms geometry
@@ -25,7 +25,10 @@ include "TrackingTools/TrackFitters/data/KFTrajectoryFitterESProducer.cfi"
 include "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
 
 # KFFittingSmootherESProducer
-include "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+#include "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+es_module KFFittingSmootherTIF = KFFittingSmoother from "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+replace KFFittingSmootherTIF.ComponentName = "KFFittingSmootherTIF"
+replace KFFittingSmootherTIF.MinNumberOfHits = 4	
 
 # PropagatorWithMaterialESProducer
 include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
@@ -44,3 +47,4 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 # TrackProducer
 module ctfWithMaterialTracksTIF = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
 replace ctfWithMaterialTracksTIF.src = "ckfTrackCandidatesTIF"
+replace ctfWithMaterialTracksTIF.Fitter = "KFFittingSmootherTIF"
