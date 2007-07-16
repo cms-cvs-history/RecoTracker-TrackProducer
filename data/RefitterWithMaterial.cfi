@@ -6,4 +6,5 @@ module TrackRefitter = TrackRefitter
   string producer = ""
   string TTRHBuilder = "WithTrackAngle"
   bool TrajectoryInEvent = false
+  string constraint = ""
 }
