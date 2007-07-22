@@ -10,6 +10,7 @@
 <use name=MagneticField/Records>
 <use name=MagneticField/Engine>
 <use name=SimDataFormats/Vertex>
+<use name=TrackingTools/PatternTools>
 <use name=rootcintex>
 <use name=root>
 
@@ -31,3 +32,18 @@
   <use name=TrackingTools/PatternTools>
   <flags EDM_PLUGIN=1>
 </library>
+
+<library file=MomentumConstraintProducer.cc name=MomentumConstraintProducer>
+   <use name=FWCore/Framework>
+   <use name=FWCore/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <flags EDM_PLUGIN=1>
+</library>
+
+<library file=VertexConstraintProducer.cc name=VertexConstraintProducer>
+   <use name=FWCore/Framework>
+   <use name=FWCore/PluginManager>
+   <use name=FWCore/ParameterSet>
+   <flags EDM_PLUGIN=1>
+</library>
+
