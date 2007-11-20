@@ -1,7 +1,7 @@
 module ctfWithMaterialTracks = TrackProducer 
 {
-  string Fitter = "KFFittingSmoother"   
-  string Propagator = "PropagatorWithMaterial" 
+  string Fitter = "FittingSmootherRK"   
+  string Propagator = "RungeKuttaTrackerPropagator" 
   string src = "ckfTrackCandidates"
   string producer = ""
   string TTRHBuilder       =   "WithTrackAngle"
