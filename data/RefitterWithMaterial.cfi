@@ -9,4 +9,5 @@ module TrackRefitter = TrackRefitter
   string TTRHBuilder = "WithTrackAngle"
   bool TrajectoryInEvent = false
   string constraint = ""
+  bool useHitsSplitting = false
 }
