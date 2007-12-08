@@ -1,9 +1,9 @@
 module TrackRefitter = TrackRefitter 
 {
-  string Fitter = "KFFittingSmoother"   
-####### PropagationDirection will be re-set according to the ssed direction in KFTrajectoryFitter::fit
-  string Propagator = "PropagatorWithMaterial"
-#######
+  string Fitter = "FittingSmootherRK"   
+
+  string Propagator = "RungeKuttaTrackerPropagator"
+
   string src = "ctfWithMaterialTracks"
   string producer = ""
   string TTRHBuilder = "WithTrackAngle"
