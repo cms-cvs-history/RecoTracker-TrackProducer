@@ -1,5 +1,6 @@
 module ctfWithMaterialTracks = TrackProducer 
 {
+  untracked string alias = "ctfWithMaterialTracks"
   string Fitter = "FittingSmootherRK"   
   string Propagator = "RungeKuttaTrackerPropagator" 
   string src = "ckfTrackCandidates"
@@ -7,4 +8,5 @@ module ctfWithMaterialTracks = TrackProducer
   string TTRHBuilder       =   "WithTrackAngle"
   bool TrajectoryInEvent = true 
   bool useHitsSplitting = false
+
 }                                                                                                                                                           
