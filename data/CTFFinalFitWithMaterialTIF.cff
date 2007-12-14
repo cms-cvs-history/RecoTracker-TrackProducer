@@ -48,3 +48,4 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 module ctfWithMaterialTracksTIF = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
 replace ctfWithMaterialTracksTIF.src = "ckfTrackCandidatesTIF"
 replace ctfWithMaterialTracksTIF.Fitter = "KFFittingSmootherTIF"
+replace ctfWithMaterialTracksTIF.Propagator = "PropagatorWithMaterial"
