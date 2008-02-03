@@ -18,13 +18,13 @@ include "TrackingTools/KalmanUpdators/data/KFUpdatorESProducer.cfi"
 include "TrackingTools/KalmanUpdators/data/Chi2MeasurementEstimatorESProducer.cfi"
 
 # KFTrajectoryFitterESProducer
-include "TrackingTools/TrackFitters/data/KFTrajectoryFitterESProducer.cfi"
+include "TrackingTools/TrackFitters/data/RungeKuttaKFTrajectoryFitterESProducer.cfi"
 
 # KFTrajectorySmootherESProducer
-include "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
+include "TrackingTools/TrackFitters/data/RungeKuttaKFTrajectorySmootherESProducer.cfi"
 
 # KFFittingSmootherESProducer
-include "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+include "TrackingTools/TrackFitters/data/RungeKuttaKFFittingSmootherESProducer.cfi"
 
 # PropagatorWithMaterialESProducer
 include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
