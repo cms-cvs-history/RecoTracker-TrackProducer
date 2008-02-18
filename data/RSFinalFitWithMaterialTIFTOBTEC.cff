@@ -43,4 +43,4 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 # include TrackProducer and clone with new module label
 module  rsWithMaterialTracksTIFTOBTEC                   = rsWithMaterialTracks from "RecoTracker/TrackProducer/data/RSFinalFitWithMaterial.cfi"
-replace rsWithMaterialTracksTIFTOBTEC.src               = "rsTrackCandidatesTIFTOBTEC"
+replace rsWithMaterialTracksTIFTOBTEC.src               = rsTrackCandidatesTIFTOBTEC

@@ -46,5 +46,5 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 # TrackProducer
 module ctfWithMaterialTracksTIFTOBTEC = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
-replace ctfWithMaterialTracksTIFTOBTEC.src = "ckfTrackCandidatesTIFTOBTEC"
+replace ctfWithMaterialTracksTIFTOBTEC.src = ckfTrackCandidatesTIFTOBTEC
 replace ctfWithMaterialTracksTIFTOBTEC.Fitter = "KFFittingSmootherTIFTOBTEC"

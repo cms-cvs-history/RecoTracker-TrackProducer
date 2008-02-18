@@ -32,4 +32,4 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 # TrackProducer
 module ctfPixelLess = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
-replace ctfPixelLess.src = "ckfTrackCandidatesPixelLess"
+replace ctfPixelLess.src = ckfTrackCandidatesPixelLess

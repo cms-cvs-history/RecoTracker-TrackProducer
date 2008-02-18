@@ -28,4 +28,4 @@ include "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cff"
 module ctfWithMaterialTracksBeamHaloMuon = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
 replace ctfWithMaterialTracksBeamHaloMuon.Fitter = "KFFittingSmootherBH"
 replace ctfWithMaterialTracksBeamHaloMuon.Propagator = "BeamHaloPropagatorAlong"
-replace ctfWithMaterialTracksBeamHaloMuon.src = "ckfTrackCandidatesBeamHaloMuon"
+replace ctfWithMaterialTracksBeamHaloMuon.src = ckfTrackCandidatesBeamHaloMuon

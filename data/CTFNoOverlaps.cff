@@ -32,4 +32,4 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 # TrackProducer
 module ctfNoOverlaps = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
-replace ctfNoOverlaps.src = "ckfTrackCandidatesNoOverlaps"
+replace ctfNoOverlaps.src = ckfTrackCandidatesNoOverlaps

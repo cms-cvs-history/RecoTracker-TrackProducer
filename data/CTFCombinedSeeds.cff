@@ -31,4 +31,4 @@ include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder
 
 # TrackProducer
 module ctfCombinedSeeds = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
-replace ctfCombinedSeeds.src = "ckfTrackCandidatesCombinedSeeds"
+replace ctfCombinedSeeds.src = ckfTrackCandidatesCombinedSeeds
