@@ -4,8 +4,8 @@ module TrackRefitter = TrackRefitter
 
   string Propagator = "RungeKuttaTrackerPropagator"
 
-  string src = "ctfWithMaterialTracks"
-  string producer = ""
+  InputTag src = ctfWithMaterialTracks
+  InputTag beamSpot      = offlineBeamSpot
   string TTRHBuilder = "WithTrackAngle"
   bool TrajectoryInEvent = false
   string constraint = ""
