@@ -8,5 +8,5 @@ module ctfWithMaterialTracks = TrackProducer
   string TTRHBuilder       =   "WithTrackAngle"
   bool TrajectoryInEvent = true 
   bool useHitsSplitting = false
-
+  InputTag clusterRemovalInfo = ""   // "" means no need to do re-keying
 }                                                                                                                                                           

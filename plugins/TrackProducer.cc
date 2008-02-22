@@ -21,6 +21,12 @@ TrackProducer::TrackProducer(const edm::ParameterSet& iConfig):
   setSrc( iConfig.getParameter<std::string>( "src" ));
   setProducer( iConfig.getParameter<std::string>( "producer" ));
   setAlias( iConfig.getParameter<std::string>( "@module_label" ) );
+
+  if ( iConfig.exists("clusterRemovalInfo") ) {
+        edm::InputTag tag = iConfig.getParameter<edm::InputTag>("clusterRemovalInfo");
+        if (!(tag == edm::InputTag())) { setClusterRemovalInfo( tag ); }
+  }
+
   //register your products
   produces<reco::TrackCollection>().setBranchAlias( alias_ + "Tracks" );
   produces<reco::TrackExtraCollection>().setBranchAlias( alias_ + "TrackExtras" );
