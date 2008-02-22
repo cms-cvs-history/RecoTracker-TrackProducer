@@ -3,10 +3,10 @@ module ctfWithMaterialTracks = TrackProducer
   untracked string alias = "ctfWithMaterialTracks"
   string Fitter = "FittingSmootherRK"   
   string Propagator = "RungeKuttaTrackerPropagator" 
-  string src = "ckfTrackCandidates"
-  string producer = ""
+  InputTag src = ckfTrackCandidates
+  InputTag beamSpot      = offlineBeamSpot
   string TTRHBuilder       =   "WithTrackAngle"
   bool TrajectoryInEvent = true 
   bool useHitsSplitting = false
-  InputTag clusterRemovalInfo = ""   // "" means no need to do re-keying
+  InputTag clusterRemovalInfo = ""  // "" means no need to do re-keying
 }                                                                                                                                                           
