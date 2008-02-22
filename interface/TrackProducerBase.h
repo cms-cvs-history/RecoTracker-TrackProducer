@@ -4,8 +4,8 @@
 /** \class TrackProducerBase
  *  Base Class To Produce Tracks
  *
- *  $Date: 2007/03/27 07:12:05 $
- *  $Revision: 1.11 $
+ *  $Date: 2007/10/06 08:04:11 $
+ *  $Revision: 1.12 $
  *  \author cerati
  */
 
@@ -15,11 +15,14 @@
 #include "FWCore/Framework/interface/ESHandle.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/ParameterSet/interface/InputTag.h"
 
 #include "TrackingTools/PatternTools/interface/Trajectory.h"
 
 #include "DataFormats/TrackReco/interface/TrackExtra.h"
 #include "DataFormats/TrackCandidate/interface/TrackCandidateCollection.h"
+#include "DataFormats/TrackerRecHit2D/interface/ClusterRemovalInfo.h"
+#include "FWCore/ParameterSet/interface/InputTag.h"
 
 class Propagator;
 class TrajectoryStateUpdator;
@@ -37,7 +40,8 @@ public:
 public:
   /// Constructor
   TrackProducerBase(bool trajectoryInEvent = false):
-    trajectoryInEvent_(trajectoryInEvent){}
+    trajectoryInEvent_(trajectoryInEvent),
+    rekeyClusterRefs_(false) {}
 
   /// Destructor
   virtual ~TrackProducerBase();
@@ -72,6 +76,14 @@ public:
     alias.erase(alias.size()-6,alias.size());
     alias_=alias;
   }
+
+  void setClusterRemovalInfo(const edm::InputTag &clusterRemovalInfo) { 
+    rekeyClusterRefs_ = true; 
+    clusterRemovalInfo_ = clusterRemovalInfo; 
+  }
+ 
+  const edm::ParameterSet& getConf() const {return conf_;}
+
  private:
   edm::ParameterSet conf_;
   std::string src_;
@@ -80,6 +92,9 @@ public:
   std::string alias_;
   bool trajectoryInEvent_;
   edm::OrphanHandle<TrackCollection> rTracks_;
+  
+  bool rekeyClusterRefs_;
+  edm::InputTag clusterRemovalInfo_;
 };
 
 #include "RecoTracker/TrackProducer/interface/TrackProducerBase.icc"
