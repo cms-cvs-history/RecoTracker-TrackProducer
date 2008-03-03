@@ -9,4 +9,5 @@ module ctfWithMaterialTracks = TrackProducer
   bool TrajectoryInEvent = true 
   bool useHitsSplitting = false
   InputTag clusterRemovalInfo = ""  // "" means no need to do re-keying
+  string AlgorithmName = "undefAlgorithm"
 }                                                                                                                                                           

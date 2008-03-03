@@ -7,4 +7,5 @@ module rsWithMaterialTracks = TrackProducer
   string TTRHBuilder     = "WithTrackAngle"
   bool TrajectoryInEvent = true
   bool useHitsSplitting = false
+  string AlgorithmName = "rs"
 }                                                                                                                                                           

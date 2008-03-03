@@ -29,3 +29,4 @@ module ctfWithMaterialTracksBeamHaloMuon = ctfWithMaterialTracks from "RecoTrack
 replace ctfWithMaterialTracksBeamHaloMuon.Fitter = "KFFittingSmootherBH"
 replace ctfWithMaterialTracksBeamHaloMuon.Propagator = "BeamHaloPropagatorAlong"
 replace ctfWithMaterialTracksBeamHaloMuon.src = ckfTrackCandidatesBeamHaloMuon
+replace ctfWithMaterialTracksBeamHaloMuon.AlgorithmName = "beamhalo"
