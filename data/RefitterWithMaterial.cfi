@@ -10,4 +10,5 @@ module TrackRefitter = TrackRefitter
   bool TrajectoryInEvent = false
   string constraint = ""
   bool useHitsSplitting = false
+  string AlgorithmName = "undefAlgorithm"
 }
