@@ -1,5 +1,4 @@
 # magnetic field
-#include "Geometry/CMSCommonData/data/cmsMagneticFieldXML.cfi"
 include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
 
 # cms geometry
@@ -18,17 +17,27 @@ include "TrackingTools/KalmanUpdators/data/KFUpdatorESProducer.cfi"
 # Chi2MeasurementEstimatorESProducer
 include "TrackingTools/KalmanUpdators/data/Chi2MeasurementEstimatorESProducer.cfi"
 
+# PropagatorWithMaterialESProducer
+es_module RungeKuttaTrackerPropagator = MaterialPropagator from "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
+replace RungeKuttaTrackerPropagator.ComponentName = "RungeKuttaTrackerPropagator"
+replace RungeKuttaTrackerPropagator.useRungeKutta = true
+
 # KFTrajectoryFitterESProducer
-include "TrackingTools/TrackFitters/data/KFTrajectoryFitterESProducer.cfi"
+es_module FitterRK = KFTrajectoryFitter from "TrackingTools/TrackFitters/data/KFTrajectoryFitterESProducer.cfi"
+replace FitterRK.ComponentName = "FitterRK"
+replace FitterRK.Propagator = "RungeKuttaTrackerPropagator"
 
 # KFTrajectorySmootherESProducer
-include "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
+es_module SmootherRK = KFTrajectorySmoother from "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
+replace SmootherRK.ComponentName = "SmootherRK"
+replace SmootherRK.Propagator = "RungeKuttaTrackerPropagator"
 
 # KFFittingSmootherESProducer
-#include "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
-es_module KFFittingSmootherP5 = KFFittingSmoother from "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
-replace KFFittingSmootherP5.ComponentName = "KFFittingSmootherP5"
-replace KFFittingSmootherP5.MinNumberOfHits = 4	
+es_module FittingSmootherRKP5 = KFFittingSmoother from "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+replace FittingSmootherRKP5.ComponentName = "FittingSmootherRKP5"
+replace FittingSmootherRKP5.Fitter = "FitterRK"
+replace FittingSmootherRKP5.Smoother = "SmootherRK"
+replace FittingSmootherRKP5.MinNumberOfHits = 4
 
 # PropagatorWithMaterialESProducer
 include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
@@ -37,14 +46,13 @@ include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
 include "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
 # stripCPE
 include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
-   include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
+include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 # pixelCPE
 include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
 #TransientTrackingBuilder
 include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
 
-
 # TrackProducer
 module ctfWithMaterialTracksP5 = ctfWithMaterialTracks from "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cfi"
 replace ctfWithMaterialTracksP5.src = ckfTrackCandidatesP5
-replace ctfWithMaterialTracksP5.Fitter = "KFFittingSmootherP5"
+replace ctfWithMaterialTracksP5.Fitter = "FittingSmootherRKP5"
