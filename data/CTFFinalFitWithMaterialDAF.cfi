@@ -1,12 +1,12 @@
 module ctfWithMaterialTracksDAF = DAFTrackProducer 
 {
   string Fitter = "DAFFittingSmoother"   
-  string Propagator = "PropagatorWithMaterial" 
-  InputTag src = ckfTrackCandidates
+  string Propagator = "RungeKuttaTrackerPropagator" 
+  InputTag src = DAFTrackCandidateMaker
   InputTag beamSpot = offlineBeamSpot
   string MeasurementCollector = "groupedMultiRecHitCollector"
   string UpdatorName = "SiTrackerMultiRecHitUpdator"  
-  string TTRHBuilder       =   "WithTrackAngle"
-  int32  MinHits = 5 	
+  string TTRHBuilder       =   "WithAngleAndTemplate"
+  int32  MinHits = 3 	
   bool TrajectoryInEvent = false 
 }                                                                                                                                                           
