@@ -25,6 +25,11 @@ es_module RungeKuttaTrackerPropagator = MaterialPropagator from "TrackingTools/M
 replace RungeKuttaTrackerPropagator.ComponentName = "RungeKuttaTrackerPropagator"
 replace RungeKuttaTrackerPropagator.useRungeKutta = true
 
+# OppositePropagatorWithMaterialESProducer
+es_module OppositeRungeKuttaTrackerPropagator = OppositeMaterialPropagator from "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
+replace OppositeRungeKuttaTrackerPropagator.ComponentName = "OppositeRungeKuttaTrackerPropagator"
+replace OppositeRungeKuttaTrackerPropagator.useRungeKutta = true
+
 
 # KFTrajectoryFitterESProducer
 include "TrackingTools/TrackFitters/data/DAFTrajectoryFitterESProducer.cfi"
