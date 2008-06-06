@@ -1,0 +1,12 @@
+module GsfTrackRefitter = GsfTrackRefitter 
+{
+  string Fitter = "GsfElectronFittingSmoother"   
+
+  string Propagator = "fwdGsfElectronPropagator"
+
+  InputTag src = pixelMatchGsfFit
+  InputTag beamSpot      = offlineBeamSpot
+  string TTRHBuilder = "WithTrackAngle"
+  bool TrajectoryInEvent = false
+  bool useHitsSplitting = false
+}
