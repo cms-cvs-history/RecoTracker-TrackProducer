@@ -17,39 +17,21 @@ include "TrackingTools/KalmanUpdators/data/KFUpdatorESProducer.cfi"
 # Chi2MeasurementEstimatorESProducer
 include "TrackingTools/KalmanUpdators/data/Chi2MeasurementEstimatorESProducer.cfi"
 
-# PropagatorWithMaterialESProducer
-es_module RungeKuttaTrackerPropagator = MaterialPropagator from "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
-replace RungeKuttaTrackerPropagator.ComponentName = "RungeKuttaTrackerPropagator"
-replace RungeKuttaTrackerPropagator.useRungeKutta = true
+# Propagators
+include "TrackingTools/MaterialEffects/data/Propagators.cff"
 
-
-# KFTrajectoryFitterESProducer
-es_module FitterRK = KFTrajectoryFitter from "TrackingTools/TrackFitters/data/KFTrajectoryFitterESProducer.cfi"
-replace FitterRK.ComponentName = "FitterRK"
-replace FitterRK.Propagator = "RungeKuttaTrackerPropagator"
-
-# KFTrajectorySmootherESProducer
-es_module SmootherRK = KFTrajectorySmoother from "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
-replace SmootherRK.ComponentName = "SmootherRK"
-replace SmootherRK.Propagator = "RungeKuttaTrackerPropagator"
-
-
-# KFFittingSmootherESProducer
-es_module FittingSmootherRK = KFFittingSmoother from "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
-replace FittingSmootherRK.ComponentName = "FittingSmootherRK"
-replace FittingSmootherRK.Fitter = "FitterRK"
-replace FittingSmootherRK.Smoother = "SmootherRK"
-
-# PropagatorWithMaterialESProducer
-#include "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
+# TrackFitters
+include "TrackingTools/TrackFitters/data/TrackFitters.cff"
 
 # stripCPE
 include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
    include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 # pixelCPE
 include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
-#TransientTrackingBuilder
-include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
+
+
+#TransientTrackingRecHitBuilders
+include "RecoTracker/TransientTrackingRecHit/data/TTRHBuilders.cff"
 
 
 # TrackProducer
