@@ -6,7 +6,7 @@ module TrackRefitter = TrackRefitter
 
   InputTag src = generalTracks
   InputTag beamSpot      = offlineBeamSpot
-  string TTRHBuilder = "WithTrackAngle"
+  string TTRHBuilder = "WithAngleAndTemplate"
   bool TrajectoryInEvent = false
   string constraint = ""
   bool useHitsSplitting = false
