@@ -1,4 +1,4 @@
-#include "RecoTracker/TrackProducer/interface/GsfTrackProducerBase.h"
+#include "RecoTracker/TrackProducer/interface/TrackProducerBase.h"
 
 /// user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -17,12 +17,12 @@
 
 
 //destructor
-GsfTrackProducerBase::~GsfTrackProducerBase(){ }
+TrackProducerBase::~TrackProducerBase(){ }
 
 // member functions
 // ------------ method called to produce the data  ------------
 
-void GsfTrackProducerBase::getFromES(const edm::EventSetup& setup,
+void TrackProducerBase::getFromES(const edm::EventSetup& setup,
 				  edm::ESHandle<TrackerGeometry>& theG,
 				  edm::ESHandle<MagneticField>& theMF,
 				  edm::ESHandle<TrajectoryFitter>& theFitter,
@@ -32,29 +32,29 @@ void GsfTrackProducerBase::getFromES(const edm::EventSetup& setup,
   //
   //get geometry
   //
-  LogDebug("GsfTrackProducer") << "get geometry" << "\n";
+  LogDebug("TrackProducer") << "get geometry" << "\n";
   setup.get<TrackerDigiGeometryRecord>().get(theG);
   //
   //get magnetic field
   //
-  LogDebug("GsfTrackProducer") << "get magnetic field" << "\n";
+  LogDebug("TrackProducer") << "get magnetic field" << "\n";
   setup.get<IdealMagneticFieldRecord>().get(theMF);  
   //
   // get the fitter from the ES
   //
-  LogDebug("GsfTrackProducer") << "get the fitter from the ES" << "\n";
+  LogDebug("TrackProducer") << "get the fitter from the ES" << "\n";
   std::string fitterName = conf_.getParameter<std::string>("Fitter");   
   setup.get<TrackingComponentsRecord>().get(fitterName,theFitter);
   //
   // get also the propagator
   //
-  LogDebug("GsfTrackProducer") << "get also the propagator" << "\n";
+  LogDebug("TrackProducer") << "get also the propagator" << "\n";
   std::string propagatorName = conf_.getParameter<std::string>("Propagator");   
   setup.get<TrackingComponentsRecord>().get(propagatorName,thePropagator);
   //
   // get the builder
   //
-  LogDebug("GsfTrackProducer") << "get also the TransientTrackingRecHitBuilder" << "\n";
+  LogDebug("TrackProducer") << "get also the TransientTrackingRecHitBuilder" << "\n";
   std::string builderName = conf_.getParameter<std::string>("TTRHBuilder");   
   setup.get<TransientRecHitRecord>().get(builderName,theBuilder);
 
@@ -62,47 +62,49 @@ void GsfTrackProducerBase::getFromES(const edm::EventSetup& setup,
 
 }
 
-void GsfTrackProducerBase::getFromEvt(edm::Event& theEvent,edm::Handle<TrackCandidateCollection>& theTCCollection)
+void TrackProducerBase::getFromEvt(edm::Event& theEvent,edm::Handle<TrackCandidateCollection>& theTCCollection)
 {
   //
   //get the TrackCandidateCollection from the event
   //
-  LogDebug("GsfTrackProducer") << 
+  LogDebug("TrackProducer") << 
     "get the TrackCandidateCollection from the event, source is " << src_<<"\n";
   theEvent.getByLabel(src_,theTCCollection );
 }
 
-void GsfTrackProducerBase::getFromEvt(edm::Event& theEvent,edm::Handle<reco::TrackCollection>& theTCollection)
+void TrackProducerBase::getFromEvt(edm::Event& theEvent,edm::Handle<reco::TrackCollection>& theTCollection)
 {
   //
   //get the TrackCollection from the event
   //
-  LogDebug("GsfTrackProducer") << 
+  LogDebug("TrackProducer") << 
     "get the TrackCollection from the event, source is " << src_<<"\n";
   theEvent.getByLabel(src_,theTCollection );
 }
 
-void GsfTrackProducerBase::putInEvt(edm::Event& evt,
+void TrackProducerBase::putInEvt(edm::Event& evt,
 				 std::auto_ptr<TrackingRecHitCollection>& selHits,
-				 std::auto_ptr<reco::GsfTrackCollection>& selTracks,
-				 std::auto_ptr<reco::GsfTrackExtraCollection>& selTrackExtras,
+				 std::auto_ptr<reco::TrackCollection>& selTracks,
+				 std::auto_ptr<reco::TrackExtraCollection>& selTrackExtras,
+				 std::auto_ptr<std::vector<Trajectory> >&   selTrajectories,
 				 AlgoProductCollection& algoResults)
 {
 
   TrackingRecHitRefProd rHits = evt.getRefBeforePut<TrackingRecHitCollection>();
-  reco::GsfTrackExtraRefProd rTrackExtras = evt.getRefBeforePut<reco::GsfTrackExtraCollection>();
-  reco::GsfTrackRefProd rTracks = evt.getRefBeforePut<reco::GsfTrackCollection>();
+  reco::TrackExtraRefProd rTrackExtras = evt.getRefBeforePut<reco::TrackExtraCollection>();
+  reco::TrackRefProd rTracks = evt.getRefBeforePut<reco::TrackCollection>();
 
-  edm::Ref<reco::GsfTrackExtraCollection>::key_type idx = 0;
-  edm::Ref<reco::GsfTrackExtraCollection>::key_type hidx = 0;
+  edm::Ref<reco::TrackExtraCollection>::key_type idx = 0;
+  edm::Ref<reco::TrackExtraCollection>::key_type hidx = 0;
   for(AlgoProductCollection::iterator i=algoResults.begin(); i!=algoResults.end();i++){
     Trajectory * theTraj = (*i).first;
+    if(trajectoryInEvent_) selTrajectories->push_back(*theTraj);
     const TrajectoryFitter::RecHitContainer& transHits = theTraj->recHits();
 
-    reco::GsfTrack * theTrack = (*i).second;
+    reco::Track * theTrack = (*i).second;
     
     //     if( ) {
-    reco::GsfTrack t = * theTrack;
+    reco::Track t = * theTrack;
     selTracks->push_back( t );
     
     //sets the outermost and innermost TSOSs
@@ -120,34 +122,24 @@ void GsfTrackProducerBase::putInEvt(edm::Event& evt,
       outerId = theTraj->firstMeasurement().recHit()->geographicalId().rawId();
       innerId = theTraj->lastMeasurement().recHit()->geographicalId().rawId();
    }
-    //build the GsfTrackExtra
+    //build the TrackExtra
     GlobalPoint v = outertsos.globalParameters().position();
     GlobalVector p = outertsos.globalParameters().momentum();
     math::XYZVector outmom( p.x(), p.y(), p.z() );
     math::XYZPoint  outpos( v.x(), v.y(), v.z() );
-    std::vector<reco::GsfComponent5D> outerStates;
-    outerStates.reserve(outertsos.components().size());
-    fillStates(outertsos,outerStates);
-
     v = innertsos.globalParameters().position();
     p = innertsos.globalParameters().momentum();
     math::XYZVector inmom( p.x(), p.y(), p.z() );
     math::XYZPoint  inpos( v.x(), v.y(), v.z() );
-    std::vector<reco::GsfComponent5D> innerStates;
-    innerStates.reserve(innertsos.components().size());
-    fillStates(innertsos,innerStates);
 
-    reco::GsfTrackExtraRef teref= reco::GsfTrackExtraRef ( rTrackExtras, idx ++ );
-    reco::GsfTrack & track = selTracks->back();
+    reco::TrackExtraRef teref= reco::TrackExtraRef ( rTrackExtras, idx ++ );
+    reco::Track & track = selTracks->back();
     track.setExtra( teref );
-    selTrackExtras->push_back( reco::GsfTrackExtra (outpos, outmom, outertsos.curvilinearError(), 
-						    outerStates, outertsos.localParameters().pzSign(),
-						    outerId, true,
-						    inpos, inmom, innertsos.curvilinearError(), 
-						    innerStates, innertsos.localParameters().pzSign(),
-						    innerId, true));
+    selTrackExtras->push_back( reco::TrackExtra (outpos, outmom, true, inpos, inmom, true,
+						 outertsos.curvilinearError(), outerId,
+						 innertsos.curvilinearError(), innerId));
 
-    reco::GsfTrackExtra & tx = selTrackExtras->back();
+    reco::TrackExtra & tx = selTrackExtras->back();
     size_t i = 0;
     for( TrajectoryFitter::RecHitContainer::const_iterator j = transHits.begin();
 	 j != transHits.end(); j ++ ) {
@@ -163,32 +155,6 @@ void GsfTrackProducerBase::putInEvt(edm::Event& evt,
   evt.put( selTracks );
   evt.put( selTrackExtras );
   evt.put( selHits );
+  if(trajectoryInEvent_) evt.put(selTrajectories);
 }
 
-void
-GsfTrackProducerBase::fillStates (TrajectoryStateOnSurface tsos,
-				  std::vector<reco::GsfComponent5D>& states) const
-{
-//   std::cout << "in fill states" << std::endl;
-//   if ( !tsos.isValid() ) {
-//     std::cout << std::endl << std::endl << "invalid tsos" << std::endl;
-//     return;
-//   }
-  reco::GsfComponent5D::ParameterVector pLocS;
-  reco::GsfComponent5D::CovarianceMatrix cLocS;
-  std::vector<TrajectoryStateOnSurface> components(tsos.components());
-  for ( std::vector<TrajectoryStateOnSurface>::const_iterator i=components.begin();
-	  i!=components.end(); ++i ) {
-//     if ( !(*i).isValid() ) {
-//       std::cout << std::endl << "invalid component" << std::endl;
-//       continue;
-//     }
-    const AlgebraicVector& pLoc = i->localParameters().vector();
-    for ( int j=0; j<reco::GsfTrackExtra::dimension; ++j )  pLocS(j) = pLoc[j];
-    const AlgebraicSymMatrix& cLoc = i->localError().matrix();
-    for ( int j1=0; j1<reco::GsfTrack::dimension; ++j1 )
-      for ( int j2=0; j2<=j1; ++j2 )  cLocS(j1,j2) = cLoc[j1][j2];
-    states.push_back(reco::GsfComponent5D(i->weight(),pLocS,cLocS));
-  }
-//   std::cout << "end fill states" << std::endl;
-}

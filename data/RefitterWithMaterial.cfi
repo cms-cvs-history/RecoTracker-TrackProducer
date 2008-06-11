@@ -1,14 +1,8 @@
 module TrackRefitter = TrackRefitter 
 {
-  string Fitter = "FittingSmootherRK"   
-
-  string Propagator = "RungeKuttaTrackerPropagator"
-
-  InputTag src = generalTracks
-  InputTag beamSpot      = offlineBeamSpot
-  string TTRHBuilder = "WithAngleAndTemplate"
+  string Fitter = "KFFittingSmoother"   
+  string Propagator = "PropagatorWithMaterial" 
+  string src = "ctfWithMaterialTracks"
+  string TTRHBuilder = "WithTrackAngle"
   bool TrajectoryInEvent = false
-  string constraint = ""
-  bool useHitsSplitting = false
-  string AlgorithmName = "undefAlgorithm"
 }

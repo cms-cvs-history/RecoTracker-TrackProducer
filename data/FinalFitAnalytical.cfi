@@ -1,0 +1,58 @@
+  es_module p1 = AnalyticalPropagatorESProducer
+  {
+    string ComponentName = "AnalyticalPropagator"   
+    string PropagationDirection = "alongMomentum"
+  }
+
+  es_module p2 = AnalyticalPropagatorESProducer
+  {
+    string ComponentName = "AnalyticalPropagatorOpposite"   
+    string PropagationDirection = "oppositeToMomentum"
+  }
+
+
+  
+  es_module = KFUpdatorESProducer
+  {
+    string ComponentName = "KFUpdator"   
+  }
+
+  es_module = Chi2MeasurementEstimatorESProducer
+  {
+    string ComponentName = "Chi2"   
+    double MaxChi2 = 30. 
+    double nSigma = 3.
+  }
+
+  es_module = KFTrajectoryFitterESProducer 
+  {
+    string ComponentName = "KFFitter"   
+    string  Propagator = "AnalyticalPropagator" 
+    string Updator = "KFUpdator"
+    string Estimator = "Chi2"
+  }
+
+  es_module = KFTrajectorySmootherESProducer 
+  {
+    string ComponentName = "KFSmoother"   
+    string Propagator = "AnalyticalPropagatorOpposite" 
+    string Updator = "KFUpdator"
+    string Estimator = "Chi2"
+
+  }
+
+  es_module = KFFittingSmootherESProducer 
+  {
+    string ComponentName = "KFFittingSmoother"   
+    string  Fitter = "KFFitter" 
+    string Smoother = "KFSmoother"
+
+  }
+
+  module TrackProducer = TrackProducer 
+  {
+    string Fitter = "KFFittingSmoother"   
+    string Propagator = "AnalyticalPropagator" 
+    string src = "trackcandidates"
+    bool TrajectoryInEvent = false
+  }

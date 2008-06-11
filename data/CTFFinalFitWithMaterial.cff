@@ -17,21 +17,27 @@ include "TrackingTools/KalmanUpdators/data/KFUpdatorESProducer.cfi"
 # Chi2MeasurementEstimatorESProducer
 include "TrackingTools/KalmanUpdators/data/Chi2MeasurementEstimatorESProducer.cfi"
 
-# Propagators
-include "TrackingTools/MaterialEffects/data/Propagators.cff"
+# KFTrajectoryFitterESProducer
+include "TrackingTools/TrackFitters/data/KFTrajectoryFitterESProducer.cfi"
 
-# TrackFitters
-include "TrackingTools/TrackFitters/data/TrackFitters.cff"
+# KFTrajectorySmootherESProducer
+include "TrackingTools/TrackFitters/data/KFTrajectorySmootherESProducer.cfi"
 
+# KFFittingSmootherESProducer
+include "TrackingTools/TrackFitters/data/KFFittingSmootherESProducer.cfi"
+
+# PropagatorWithMaterialESProducer
+include "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
+
+# PropagatorWithMaterialESProducer
+include "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
 # stripCPE
 include "RecoLocalTracker/SiStripRecHitConverter/data/StripCPEfromTrackAngle.cfi"
    include "RecoLocalTracker/SiStripRecHitConverter/data/SiStripRecHitMatcher.cfi"
 # pixelCPE
 include "RecoLocalTracker/SiPixelRecHits/data/PixelCPEParmError.cfi"
-
-
-#TransientTrackingRecHitBuilders
-include "RecoTracker/TransientTrackingRecHit/data/TTRHBuilders.cff"
+#TransientTrackingBuilder
+include "RecoTracker/TransientTrackingRecHit/data/TransientTrackingRecHitBuilder.cfi"
 
 
 # TrackProducer

@@ -12,9 +12,6 @@
 
 #include "MagneticField/Engine/interface/MagneticField.h" 
 #include "MagneticField/Records/interface/IdealMagneticFieldRecord.h" 
-#include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
-#include "TrackingTools/Records/interface/TransientTrackRecord.h"
-#include "TrackingTools/TransientTrack/interface/TransientTrack.h"
 
 #include <iostream>
 #include <string>
@@ -27,7 +24,6 @@
 
 using namespace edm;
 using namespace std;
-using namespace reco;
 
 class TrackValidator : public edm::EDAnalyzer {
  public:
@@ -119,9 +115,7 @@ class TrackValidator : public edm::EDAnalyzer {
   }
 
   virtual void analyze(const edm::Event& event, const edm::EventSetup& setup){
-std::cout << "In TrackValidator\n";
-    edm::ESHandle<TransientTrackBuilder> theB;
-    setup.get<TransientTrackRecord>().get("TransientTrackBuilder",theB);
+
     for (unsigned int w=0;w<label.size();w++){
 
       //
@@ -139,32 +133,29 @@ std::cout << "In TrackValidator\n";
       event.getByLabel(label[w], trackCollection);
       const reco::TrackCollection tC = *(trackCollection.product());
 
-      vector<TransientTrack> t_tks = (*theB).build(trackCollection);
-      cout << "Found: " << t_tks.size() << " reconstructed tracks" << "\n";
-
       //
       //fill simulation histograms
       //
       int st=0;
       for (SimTrackContainer::const_iterator simTrack=simTC.begin(); simTrack!=simTC.end(); simTrack++){
-	if (abs(simTrack->momentum().eta())>max || 
-	    abs(simTrack->momentum().eta())<min) continue;
+	if (abs(simTrack->momentum().pseudoRapidity())>max || 
+	    abs(simTrack->momentum().pseudoRapidity())<min) continue;
 	st++;
-	h_ptSIM[w]->Fill(simTrack->momentum().pt());
-	h_etaSIM[w]->Fill(simTrack->momentum().eta());
+	h_ptSIM[w]->Fill(simTrack->momentum().perp());
+	h_etaSIM[w]->Fill(simTrack->momentum().pseudoRapidity());
 
-	h_vertposSIM[w]->Fill(simVC[simTrack->vertIndex()].position().pt());
+	h_vertposSIM[w]->Fill(simVC[simTrack->vertIndex()].position().perp());
 	
 	if (simTrack->type()!=partId) continue;
 	//compute number of tracks per eta interval
 	int i=0;
 	for (vector<double>::iterator h=etaintervals[w].begin(); h!=etaintervals[w].end()-1; h++){
-	  if (abs(simTrack->momentum().eta())>etaintervals[w][i]&&
-	      abs(simTrack->momentum().eta())<etaintervals[w][i+1]) {
+	  if (abs(simTrack->momentum().pseudoRapidity())>etaintervals[w][i]&&
+	      abs(simTrack->momentum().pseudoRapidity())<etaintervals[w][i+1]) {
 	    totSIM[w][i]++;
 	    bool doit=false;
 	    for (reco::TrackCollection::const_iterator track=tC.begin(); track!=tC.end(); track++){
-	      if (abs(track->pt()-simTrack->momentum().pt())<(simTrack->momentum().pt()*0.1)) doit=true; 
+	      if (abs(track->pt()-simTrack->momentum().perp())<(simTrack->momentum().perp()*0.1)) doit=true; 
 	    }
 	    if (doit) totREC[w][i]++;
 	  }
@@ -181,12 +172,9 @@ std::cout << "In TrackValidator\n";
       //fill reconstructed track histograms
       //
       int rt=0;
-      for (vector<TransientTrack>::const_iterator track=t_tks.begin(); track!=t_tks.end(); track++){
+      for (reco::TrackCollection::const_iterator track=tC.begin(); track!=tC.end(); track++){
       
-	TrajectoryStateClosestToPoint tscp = track->impactPointTSCP();
-	cout << tscp.perigeeParameters().vector() << tscp.perigeeError().covarianceMatrix()<<endl;
-
-	if (abs(track->track().eta())>max || abs(track->track().eta())<min) continue;
+	if (abs(track->eta())>max || abs(track->eta())<min) continue;
 
 	rt++;
 
@@ -194,8 +182,8 @@ std::cout << "In TrackValidator\n";
 	h_nchi2[w]->Fill(track->normalizedChi2());
 	h_hits[w]->Fill(track->numberOfValidHits());
 	chi2_vs_nhits[w]->Fill(track->numberOfValidHits(),track->normalizedChi2());
-	chi2_vs_eta[w]->Fill(track->track().eta(),track->normalizedChi2());
-	nhits_vs_eta[w]->Fill(track->track().eta(),track->numberOfValidHits());
+	chi2_vs_eta[w]->Fill(track->eta(),track->normalizedChi2());
+	nhits_vs_eta[w]->Fill(track->eta(),track->numberOfValidHits());
 	h_charge[w]->Fill( track->charge() );
 
 	//pt, eta residue, theta, phi0, d0, dz pull
@@ -208,24 +196,18 @@ std::cout << "In TrackValidator\n";
 	double kres=1000;
 	for (SimTrackContainer::const_iterator simTrack=simTC.begin(); simTrack!=simTC.end(); simTrack++){
 	  if (simTrack->type()!=partId) continue;
-	  double tmp=track->track().pt()-simTrack->momentum().pt();
+	  double tmp=track->pt()-simTrack->momentum().perp();
 	  if (tC.size()>1) h_pt2[w]->Fill(tmp);
 	  if (abs(tmp)<abs(ptres)) {
 	    ptres=tmp; 
-
-
-	    etares=track->initialFreeState().momentum().eta()-simTrack->momentum().eta();
-	    thetares=(tscp.perigeeParameters().theta()-simTrack->momentum().theta())/tscp.perigeeError().thetaError();
-	    phi0res=(tscp.perigeeParameters().phi()-simTrack->momentum().phi())/tscp.perigeeError().phiError();
-	    d0res=(tscp.perigeeParameters().transverseImpactParameter()-simVC[simTrack->vertIndex()].position().pt())/tscp.perigeeError().transverseImpactParameterError();
-	    dzres=(tscp.perigeeParameters().longitudinalImpactParameter()-simVC[simTrack->vertIndex()].position().z())/tscp.perigeeError().longitudinalImpactParameterError();
-
-	    
-	    const math::XYZTLorentzVectorD& vertexPosition = simVC[simTrack->vertIndex()].position();
+	    etares=track->eta()-simTrack->momentum().pseudoRapidity();
+	    thetares=(track->theta()-simTrack->momentum().theta())/track->thetaError();
+	    phi0res=(track->phi0()-simTrack->momentum().phi())/track->phi0Error();
+	    d0res=(track->d0()-simVC[simTrack->vertIndex()].position().perp())/track->d0Error();
+	    dzres=(track->dz()-simVC[simTrack->vertIndex()].position().z())/track->dzError();
+	    const HepLorentzVector vertexPosition = simVC[simTrack->vertIndex()].position(); 
 	    GlobalVector magField=theMF->inTesla(GlobalPoint(vertexPosition.x(),vertexPosition.y(),vertexPosition.z()));
-	    kres=(tscp.perigeeParameters().transverseCurvature()-(-track->charge()*2.99792458e-3 * magField.z()/simTrack->momentum().pt()))/
-	    tscp.perigeeError().transverseCurvatureError();
-
+	    kres=(track->transverseCurvature()-(-track->charge()*2.99792458e-3 * magField.z()/simTrack->momentum().perp()))/track->transverseCurvatureError();
 // 	    cout << "track->d0(): " << track->d0() << endl;
 // 	    cout << "simVC[simTrack->vertIndex()].position().perp(): " << simVC[simTrack->vertIndex()].position().perp() << endl;
 // 	    cout << "track->dz(): " << track->dz() << endl;
@@ -238,12 +220,11 @@ std::cout << "In TrackValidator\n";
 
 	  }
 	}
-	cout << etares<<endl;
-	h_pt[w]->Fill(ptres/(tscp.perigeeError().transverseCurvatureError()
-			     /tscp.perigeeParameters().transverseCurvature()));
+	h_pt[w]->Fill(ptres/(track->transverseCurvatureError()
+			     /track->transverseCurvature()*track-> pt()));
 	h_eta[w]->Fill(etares);
-	ptres_vs_eta[w]->Fill(track->track().eta(),ptres);
-	etares_vs_eta[w]->Fill(track->track().eta(),etares);
+	ptres_vs_eta[w]->Fill(track->eta(),ptres);
+	etares_vs_eta[w]->Fill(track->eta(),etares);
 	h_pullTheta[w]->Fill(thetares);
 	h_pullPhi0[w]->Fill(phi0res);
 	h_pullD0[w]->Fill(d0res);
@@ -257,9 +238,9 @@ std::cout << "In TrackValidator\n";
 	  for (SimTrackContainer::const_iterator simTrack=simTC.begin(); simTrack!=simTC.end(); simTrack++){
 	    if (simTrack->type()!=partId) continue;
 	    ptres=1000;
-	    if (abs(simTrack->momentum().eta())>etaintervals[w][i]&&
-		abs(simTrack->momentum().eta())<etaintervals[w][i+1]) {
-	      double tmp=track->track().pt()-simTrack->momentum().pt();
+	    if (abs(simTrack->momentum().pseudoRapidity())>etaintervals[w][i]&&
+		abs(simTrack->momentum().pseudoRapidity())<etaintervals[w][i+1]) {
+	      double tmp=track->pt()-simTrack->momentum().perp();
 	      if (abs(tmp)<abs(ptres)) ptres=tmp;
 	    }
 	  }
@@ -273,10 +254,10 @@ std::cout << "In TrackValidator\n";
 	    if (simTrack->type()!=partId) continue;
 	    etares=1000; 
 	    ptres =1000;
-	    if (abs(simTrack->momentum().eta())>etaintervals[w][i]&&
-		abs(simTrack->momentum().eta())<etaintervals[w][i+1]) {
-	      double tmp=track->track().pt()-simTrack->momentum().pt();
-	      if (abs(tmp)<abs(ptres)) etares=track->track().eta()-simTrack->momentum().eta();
+	    if (abs(simTrack->momentum().pseudoRapidity())>etaintervals[w][i]&&
+		abs(simTrack->momentum().pseudoRapidity())<etaintervals[w][i+1]) {
+	      double tmp=track->pt()-simTrack->momentum().perp();
+	      if (abs(tmp)<abs(ptres)) etares=track->eta()-simTrack->momentum().pseudoRapidity();
 	    }
 	  }
 	  (*h)->Fill(etares);

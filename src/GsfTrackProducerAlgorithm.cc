@@ -1,4 +1,4 @@
-#include "RecoTracker/TrackProducer/interface/TrackProducerAlgorithm.h"
+#include "RecoTracker/TrackProducer/interface/GsfTrackProducerAlgorithm.h"
 
 #include "FWCore/Framework/interface/OrphanHandle.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -21,7 +21,7 @@
 #include "TrackingTools/PatternTools/interface/TSCPBuilderNoMaterial.h"
 #include "Utilities/General/interface/CMSexception.h"
 
-void TrackProducerAlgorithm::runWithCandidate(const TrackingGeometry * theG,
+void GsfTrackProducerAlgorithm::runWithCandidate(const TrackingGeometry * theG,
 					      const MagneticField * theMF,
 					      const TrackCandidateCollection& theTCCollection,
 					      const TrajectoryFitter * theFitter,
@@ -29,7 +29,7 @@ void TrackProducerAlgorithm::runWithCandidate(const TrackingGeometry * theG,
 					      const TransientTrackingRecHitBuilder* builder,
 					      AlgoProductCollection& algoResults)
 {
-  edm::LogInfo("TrackProducer") << "Number of TrackCandidates: " << theTCCollection.size() << "\n";
+  edm::LogInfo("GsfTrackProducer") << "Number of TrackCandidates: " << theTCCollection.size() << "\n";
 
   int cont = 0;
   for (TrackCandidateCollection::const_iterator i=theTCCollection.begin(); i!=theTCCollection.end();i++)
@@ -48,7 +48,7 @@ void TrackProducerAlgorithm::runWithCandidate(const TrackingGeometry * theG,
 								     &(theG->idToDet(detId)->surface()), 
 								     theMF);
 
-      LogDebug("TrackProducer") << "Initial TSOS\n" << theTSOS << "\n";
+      LogDebug("GsfTrackProducer") << "Initial TSOS\n" << theTSOS << "\n";
       
       //convert the TrackingRecHit vector to a TransientTrackingRecHit vector
       //meanwhile computes the number of degrees of freedom
@@ -68,16 +68,16 @@ void TrackProducerAlgorithm::runWithCandidate(const TrackingGeometry * theG,
       ndof = ndof - 5;
       
       //build Track
-      LogDebug("TrackProducer") << "going to buildTrack"<< "\n";
+      LogDebug("GsfTrackProducer") << "going to buildTrack"<< "\n";
       bool ok = buildTrack(theFitter,thePropagator,algoResults, hits, theTSOS, seed, ndof);
-      LogDebug("TrackProducer") << "buildTrack result: " << ok << "\n";
+      LogDebug("GsfTrackProducer") << "buildTrack result: " << ok << "\n";
       if(ok) cont++;
     }
-  edm::LogInfo("TrackProducer") << "Number of Tracks found: " << cont << "\n";
+  edm::LogInfo("GsfTrackProducer") << "Number of Tracks found: " << cont << "\n";
 }
 
 
-void TrackProducerAlgorithm::runWithTrack(const TrackingGeometry * theG,
+void GsfTrackProducerAlgorithm::runWithTrack(const TrackingGeometry * theG,
 					  const MagneticField * theMF,
 					  const reco::TrackCollection& theTCollection,
 					  const TrajectoryFitter * theFitter,
@@ -85,7 +85,7 @@ void TrackProducerAlgorithm::runWithTrack(const TrackingGeometry * theG,
 					  const TransientTrackingRecHitBuilder* builder,
 					  AlgoProductCollection& algoResults)
 {
-  edm::LogInfo("TrackProducer") << "Number of input Tracks: " << theTCollection.size() << "\n";
+  edm::LogInfo("GsfTrackProducer") << "Number of input Tracks: " << theTCollection.size() << "\n";
   
   int cont = 0;
   for (reco::TrackCollection::const_iterator i=theTCollection.begin(); i!=theTCollection.end();i++)
@@ -147,25 +147,25 @@ void TrackProducerAlgorithm::runWithTrack(const TrackingGeometry * theG,
 					  firstState.surface(),
 					  thePropagator->magneticField()); 
 	
-	LogDebug("TrackProducer") << "Initial TSOS\n" << theTSOS << "\n";
+	LogDebug("GsfTrackProducer") << "Initial TSOS\n" << theTSOS << "\n";
 	
 	const TrajectorySeed * seed = new TrajectorySeed();//empty seed: not needed
 	//buildTrack
 	bool ok = buildTrack(theFitter,thePropagator,algoResults, hits, theTSOS, *seed, ndof);
 	if(ok) cont++;
       }catch ( CMSexception & e){
-	edm::LogInfo("TrackProducer") << "Genexception1: " << e.explainSelf() <<"\n";      
+	edm::LogInfo("GsfTrackProducer") << "Genexception1: " << e.explainSelf() <<"\n";      
       }catch ( std::exception & e){
-	edm::LogInfo("TrackProducer") << "Genexception2: " << e.what() <<"\n";      
+	edm::LogInfo("GsfTrackProducer") << "Genexception2: " << e.what() <<"\n";      
       }catch (...){
-	edm::LogInfo("TrackProducer") << "Genexception: \n";
+	edm::LogInfo("GsfTrackProducer") << "Genexception: \n";
       }
     }
-  edm::LogInfo("TrackProducer") << "Number of Tracks found: " << cont << "\n";
+  edm::LogInfo("GsfTrackProducer") << "Number of Tracks found: " << cont << "\n";
   
 }
 
-bool TrackProducerAlgorithm::buildTrack (const TrajectoryFitter * theFitter,
+bool GsfTrackProducerAlgorithm::buildTrack (const TrajectoryFitter * theFitter,
 					 const Propagator * thePropagator,
 					 AlgoProductCollection& algoResults,
 					 TransientTrackingRecHit::RecHitContainer& hits,
@@ -175,15 +175,16 @@ bool TrackProducerAlgorithm::buildTrack (const TrajectoryFitter * theFitter,
 {
   //variable declarations
   std::vector<Trajectory> trajVec;
-  reco::Track * theTrack;
+  reco::GsfTrack * theTrack;
   Trajectory * theTraj; 
       
   //perform the fit: the result's size is 1 if it succeded, 0 if fails
   trajVec = theFitter->fit(seed, hits, theTSOS);
   
-  LogDebug("TrackProducer") <<" FITTER FOUND "<< trajVec.size() << " TRAJECTORIES" <<"\n";
+  LogDebug("GsfTrackProducer") <<" FITTER FOUND "<< trajVec.size() << " TRAJECTORIES" <<"\n";
   
   TrajectoryStateOnSurface innertsos;
+  TrajectoryStateOnSurface outertsos;
   
   if (trajVec.size() != 0){
 
@@ -191,9 +192,26 @@ bool TrackProducerAlgorithm::buildTrack (const TrajectoryFitter * theFitter,
     
     if (theTraj->direction() == alongMomentum) {
       innertsos = theTraj->firstMeasurement().updatedState();
+      outertsos = theTraj->lastMeasurement().updatedState();
     } else { 
       innertsos = theTraj->lastMeasurement().updatedState();
+      outertsos = theTraj->firstMeasurement().updatedState();
     }
+//     std::cout
+//       << "Nr. of first / last states = "
+//       << innertsos.components().size() << " "
+//       << outertsos.components().size() << std::endl;
+//     std::vector<TrajectoryStateOnSurface> components = 
+//       innertsos.components();
+//     double sinTheta = 
+//       sin(innertsos.globalMomentum().theta());
+//     for ( std::vector<TrajectoryStateOnSurface>::const_iterator ic=components.begin();
+// 	  ic!=components.end(); ic++ ) {
+//       std::cout << " comp " << ic-components.begin() << " "
+// 		<< (*ic).weight() << " "
+// 		<< (*ic).localParameters().vector()[0]/sinTheta << " "
+// 		<< sqrt((*ic).localError().matrix()[0][0])/sinTheta << std::endl;
+//     }
     
     
     TSCPBuilderNoMaterial tscpBuilder;
@@ -205,7 +223,7 @@ bool TrackProducerAlgorithm::buildTrack (const TrajectoryFitter * theFitter,
  
      PerigeeTrajectoryError::CovarianceMatrix covar = tscp.perigeeError();
 
-    theTrack = new reco::Track(theTraj->chiSquared(),
+    theTrack = new reco::GsfTrack(theTraj->chiSquared(),
 			       int(ndof),//FIXME fix weight() in TrackingRecHit
 			       //			       theTraj->foundHits(),//FIXME to be fixed in Trajectory.h
 			       //			       0, //FIXME no corresponding method in trajectory.h
@@ -214,12 +232,12 @@ bool TrackProducerAlgorithm::buildTrack (const TrajectoryFitter * theFitter,
 			       covar);
 
 
-    LogDebug("TrackProducer") <<"track done\n";
+    LogDebug("GsfTrackProducer") <<"track done\n";
 
     AlgoProduct aProduct(theTraj,theTrack);
-    LogDebug("TrackProducer") <<"track done1\n";
+    LogDebug("GsfTrackProducer") <<"track done1\n";
     algoResults.push_back(aProduct);
-    LogDebug("TrackProducer") <<"track done2\n";
+    LogDebug("GsfTrackProducer") <<"track done2\n";
     
     return true;
   } 

@@ -1,11 +1,8 @@
 module rsWithMaterialTracks = TrackProducer 
 {
-  string Fitter          = "RKFittingSmoother"   
-  string Propagator      = "RungeKuttaTrackerPropagator" 
-  InputTag src           = rsTrackCandidates
-  InputTag beamSpot      = offlineBeamSpot
-  string TTRHBuilder     = "WithAngleAndTemplate"
-  bool TrajectoryInEvent = true
-  bool useHitsSplitting = false
-  string AlgorithmName = "rs"
+  string Fitter = "KFFittingSmoother"   
+  string Propagator = "PropagatorWithMaterial" 
+  string src = "rsTrackCandidates"
+  string TTRHBuilder          =  "WithTrackAngle"
+  bool TrajectoryInEvent = false
 }                                                                                                                                                           
