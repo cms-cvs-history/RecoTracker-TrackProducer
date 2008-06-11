@@ -1,7 +1,7 @@
 module ctfWithMaterialTracks = TrackProducer 
 {
   untracked string alias = "ctfWithMaterialTracks"
-  string Fitter = "RKFittingSmoother"   
+  string Fitter = "KFFittingSmootherWithOutliersRejectionAndRK"   
   string Propagator = "RungeKuttaTrackerPropagator" 
   InputTag src = ckfTrackCandidates
   InputTag beamSpot      = offlineBeamSpot
