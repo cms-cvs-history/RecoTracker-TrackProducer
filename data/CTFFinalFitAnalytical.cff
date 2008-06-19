@@ -1,5 +1,4 @@
 # magnetic field
-include "MagneticField/Engine/data/volumeBasedMagneticField.cfi"
 
 # cms geometry
 #include "Geometry/TrackerRecoData/data/trackerRecoGeometryXML.cfi"
