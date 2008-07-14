@@ -20,9 +20,9 @@ include "TrackingTools/KalmanUpdators/data/KFUpdatorESProducer.cfi"
 include "TrackingTools/KalmanUpdators/data/MRHChi2MeasurementEstimatorESProducer.cfi"
 
 # PropagatorWithMaterialESProducer
-es_module RungeKuttaTrackerPropagator = MaterialPropagator from "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
-replace RungeKuttaTrackerPropagator.ComponentName = "RungeKuttaTrackerPropagator"
-replace RungeKuttaTrackerPropagator.useRungeKutta = true
+#es_module RungeKuttaTrackerPropagator = MaterialPropagator from "TrackingTools/MaterialEffects/data/MaterialPropagator.cfi"
+#replace RungeKuttaTrackerPropagator.ComponentName = "RungeKuttaTrackerPropagator"
+#replace RungeKuttaTrackerPropagator.useRungeKutta = true
 
 # OppositePropagatorWithMaterialESProducer
 es_module OppositeRungeKuttaTrackerPropagator = OppositeMaterialPropagator from "TrackingTools/MaterialEffects/data/OppositeMaterialPropagator.cfi"
