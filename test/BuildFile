@@ -1,5 +1,4 @@
 <use name=FWCore/Utilities>
-<use name=FWCore/Framework>
 <use name=DataFormats/TrackReco>
 <use name=clhep>
 <use name=FWCore/Framework>
@@ -16,35 +15,23 @@
 
 
 <library file=TrackAnalyzer.cc name=TrackAnalyzer>
-  <use name=FWCore/Framework>
-  <use name=DataFormats/TrackReco>
   <flags EDM_PLUGIN=1>
 </library>
 
 <library file=TrackValidator.cc name=TrackValidator>
-  <use name=FWCore/Framework>
   <use name=TrackingTools/TransientTrack>
-  <use name=TrackingTools/PatternTools>
   <flags EDM_PLUGIN=1>
 </library>
 
 <library file=TrajectoryAnalyzer.cc name=TrajectoryAnalyzer>
-  <use name=FWCore/Framework>
-  <use name=TrackingTools/PatternTools>
   <flags EDM_PLUGIN=1>
 </library>
 
 <library file=MomentumConstraintProducer.cc name=MomentumConstraintProducer>
-   <use name=FWCore/Framework>
-   <use name=FWCore/PluginManager>
-   <use name=FWCore/ParameterSet>
    <flags EDM_PLUGIN=1>
 </library>
 
 <library file=VertexConstraintProducer.cc name=VertexConstraintProducer>
-   <use name=FWCore/Framework>
-   <use name=FWCore/PluginManager>
-   <use name=FWCore/ParameterSet>
    <flags EDM_PLUGIN=1>
 </library>
 
