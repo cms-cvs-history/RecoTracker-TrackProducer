@@ -1,7 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
 # magnetic field
-from MagneticField.Engine.uniformMagneticField_cfi import *
 # cms geometry
 # tracker geometry
 # tracker numbering
@@ -31,4 +30,5 @@ from RecoTracker.TrackProducer.RSFinalFitWithMaterial_cfi import *
 # include TrackProducer and clone with new module label
 rsWithMaterialTracksP5 = copy.deepcopy(rsWithMaterialTracks)
 rsWithMaterialTracksP5.src = 'rsTrackCandidatesP5'
+rsWithMaterialTracksP5.TTRHBuilder = 'WithTrackAngle'
 
