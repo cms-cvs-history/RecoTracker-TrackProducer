@@ -35,3 +35,8 @@
    <flags EDM_PLUGIN=1>
 </library>
 
+<library file=GsfVertexConstraintProducer.cc name=GsfVertexConstraintProducer>
+  <use name=TrackingTools/GsfTracking>
+   <flags EDM_PLUGIN=1>
+</library>
+
