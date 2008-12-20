@@ -1,4 +1,0 @@
-include "RecoTracker/TrackProducer/data/CTFFinalFitWithMaterial.cff"
-
-#TrackRefitter With Material
-include "RecoTracker/TrackProducer/data/RefitterWithMaterial.cfi"
