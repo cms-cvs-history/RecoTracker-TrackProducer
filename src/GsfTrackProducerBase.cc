@@ -23,6 +23,14 @@
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 #include "DataFormats/SiStripDetId/interface/SiStripDetId.h"
 
+// more stuff (AA)
+#include "DataFormats/EgammaReco/interface/ElectronSeed.h"
+
+#include "TMath.h"
+
+
+
+
 void 
 GsfTrackProducerBase::putInEvt(edm::Event& evt,
 			       const Propagator* prop,
@@ -33,8 +41,11 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
 			       std::auto_ptr<reco::GsfTrackExtraCollection>& selGsfTrackExtras,
 			       std::auto_ptr<std::vector<Trajectory> >&   selTrajectories,
 			       AlgoProductCollection& algoResults,
-			       const reco::BeamSpot& bs)
+			       const reco::BeamSpot& bs,
+             edm::Handle<reco::TrackCollection>& ctfTrackCollection)  // for matching (AA)
 {
+   // for matching of gsf tracks without track seeds (AA)
+  reco::TrackCollection const * ctfTracks = ctfTrackCollection.product();
 
   TrackingRecHitRefProd rHits = evt.getRefBeforePut<TrackingRecHitCollection>();
   reco::TrackExtraRefProd rTrackExtras = evt.getRefBeforePut<reco::TrackExtraCollection>();
@@ -103,6 +114,15 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
     reco::GsfTrack & track = selTracks->back();
     track.setExtra( teref );
     
+    // set the inner/outer momentum/position like in KFTRackProducerBase (AA)
+    // temporarily remove for testing before switching track formats (AA)
+    
+    track.setInnerPosition(inpos);
+    track.setInnerMomentum(inmom);
+    track.setOuterPosition(outpos);
+    track.setOuterMomentum(outmom);
+    
+    
     //======= I want to set the second hitPattern here =============
     if (theSchool.isValid())
       {
@@ -111,10 +131,15 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
       }
     //==============================================================
     
-    selTrackExtras->push_back( reco::TrackExtra (outpos, outmom, true, inpos, inmom, true,
-						 outertsos.curvilinearError(), outerId,
-						 innertsos.curvilinearError(), innerId,
-						 seedDir, theTraj->seedRef()));
+// use reduced extra format (AA)
+//    selTrackExtras->push_back( reco::TrackExtra (outpos, outmom, true, inpos, inmom, true,
+//						 outertsos.curvilinearError(), outerId,
+//						 innertsos.curvilinearError(), innerId,
+//						 seedDir, theTraj->seedRef()));
+    selTrackExtras->push_back( reco::TrackExtra (true, true,
+             outertsos.curvilinearError(), outerId,
+             innertsos.curvilinearError(), innerId,
+             seedDir, theTraj->seedRef()));
 
 
     reco::TrackExtra & tx = selTrackExtras->back();
@@ -193,19 +218,192 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
     std::vector<reco::GsfComponent5D> innerStates;
     innerStates.reserve(innertsos.components().size());
     fillStates(innertsos,innerStates);
-    
+
+
+/*
+  /// Find an associated CTF track for the case when there is no track seed
+  /// and set the link in gsfExtra. Use the same matching algorithms/criteria 
+  /// as previously set in PFElecTkProducer (AA)
+  //
+  // "track" is the newly created gsf track
+
+  reco::TrackRef ctfTrkRef; // ref for use in constructor of gsfExtra
+  if (theTraj->seedRef().isNull()) {
+
+    unsigned int i_ctf = 0;
+    int iBestCtfMatch = -1;
+    unsigned int ish_max = 0;
+    float dr_min = 1000;
+    // loop over the CTF tracks
+    reco::TrackCollection::const_iterator ctfTrk = ctfTracks->begin();
+
+    for ( ; ctfTrk != ctfTracks->end(); ++ctfTrk) {
+
+      unsigned int ish=0;
+
+      float dph= fabs(ctfTrk->phi()-track.phi()); 
+      if (dph>TMath::Pi()) dph-= TMath::TwoPi();
+      float det=fabs(ctfTrk->eta()-track.eta());
+      float dr =sqrt(dph*dph+det*det);  
+
+      trackingRecHit_iterator  hhit = ctfTrk->recHitsBegin();
+      trackingRecHit_iterator  hhit_end = ctfTrk->recHitsEnd();
+
+      for(;hhit != hhit_end; ++hhit) {
+
+        if (!(*hhit)->isValid()) continue;
+
+        TrajectorySeed::const_iterator hit = track.seedRef()->recHits().first;
+        TrajectorySeed::const_iterator hit_end = track.seedRef()->recHits().second;
+
+        for ( ; hit != hit_end; ++hit) {
+
+          if (!(hit->isValid())) continue;
+          if((*hhit)->sharesInput(&*(hit),TrackingRecHit::all))  ish++; 
+          //   if((hit->geographicalId()==(*hhit)->geographicalId())&&
+          //     (((*hhit)->localPosition()-hit->localPosition()).mag()<0.01)) ish++;
+
+        } // loop over gsf track rechits
+
+      } // loop over ctf track rechits
+
+
+      if ((ish>ish_max)|| ( (ish==ish_max) && (dr<dr_min)) ) {
+        ish_max=ish;
+        dr_min=dr;
+        iBestCtfMatch=i_ctf;
+      }
+
+      i_ctf++;
+    } // loop over ctfTracks
+
+    bool passNumHitsAndDR = ((ish_max>0) && (dr_min<=0.05));
+//    if(otherColl && (ish_max==0)) return -1; ??? (AA) -> otherColl is set to false in the call... no other appearance
+
+    // set the reference to the ctf track
+    if (iBestCtfMatch > -1 && passNumHitsAndDR) {
+      ctfTrkRef = reco::TrackRef ( ctfTrackCollection, iBestCtfMatch);
+    }
+
+  } // if no track seed
+*/
+
+
+
 
     reco::GsfTrackExtraRef terefGsf = reco::GsfTrackExtraRef ( rGsfTrackExtras, idxGsf ++ );
     track.setGsfExtra( terefGsf );
     selGsfTrackExtras->push_back( reco::GsfTrackExtra (outerStates, outertsos.localParameters().pzSign(),
-						       innerStates, innertsos.localParameters().pzSign(),
-						       tangents));
+                                 innerStates, innertsos.localParameters().pzSign(),
+                                 tangents)
+                                 );
+/*
+// it does not make sence to use this constructor if we are going to overwrite the link
+// after fillMode(..) is called (AA)
+    selGsfTrackExtras->push_back( reco::GsfTrackExtra (outerStates, outertsos.localParameters().pzSign(),
+                                 innerStates, innertsos.localParameters().pzSign(),
+                                 tangents,
+                                 ctfTrkRef)
+                                 );
+*/
+
+
 
     if ( innertsos.isValid() ) {
       GsfPropagatorAdapter gsfProp(AnalyticalPropagator(innertsos.magneticField(),anyDirection));
       TransverseImpactPointExtrapolator tipExtrapolator(gsfProp);
       fillMode(track,innertsos,gsfProp,tipExtrapolator,tscblBuilder,bs);
     }
+
+
+
+
+  /// Find an associated CTF track for the case when there is no track seed
+  /// and set the link in gsfExtra. Use the same matching algorithms/criteria 
+  /// as previously set in PFElecTkProducer (AA)
+  
+  // NOTE: I moved the matching block after fillMode() is called 
+  
+  // "track" is the newly created gsf track
+
+  reco::TrackRef ctfTrkRef; // ref for use in constructor of gsfExtra
+
+//  reco::ElectronSeed ElSeed(*(tx.seedRef())); 
+//  if (ElSeed.ctfTrack().isNull()) {
+
+//  set reference only for the case when there is no track seed
+//  reco::ElectronSeed ElSeed(*(selTrackExtras->back().seedRef()));
+  reco::ElectronSeed ElSeed(*(theTraj->seedRef()));  
+  if (ElSeed.ctfTrack().isNull()) {
+//  if (theTraj->seedRef().isNull()) {
+    
+    unsigned int i_ctf = 0;
+    int iBestCtfMatch = -1;
+    unsigned int ish_max = 0;
+    float dr_min = 1000;
+    // loop over the CTF tracks
+    reco::TrackCollection::const_iterator ctfTrk = ctfTracks->begin();
+
+    for ( ; ctfTrk != ctfTracks->end(); ++ctfTrk) {
+
+      unsigned int ish=0;
+
+      float dph= fabs(ctfTrk->phi()-track.phi()); 
+      if (dph>TMath::Pi()) dph-= TMath::TwoPi();
+      float det=fabs(ctfTrk->eta()-track.eta());
+      float dr =sqrt(dph*dph+det*det);  
+
+      trackingRecHit_iterator  hhit = ctfTrk->recHitsBegin();
+      trackingRecHit_iterator  hhit_end = ctfTrk->recHitsEnd();
+
+      for(;hhit != hhit_end; ++hhit) {
+
+        if (!(*hhit)->isValid()) continue;
+        
+//        TrajectorySeed::const_iterator hit = track.seedRef()->recHits().first;
+//        TrajectorySeed::const_iterator hit_end = track.seedRef()->recHits().second;
+      
+        // get them from the trajectory theTraj->seedRef() 
+        // or
+        // the seed, ElSeed , maybe? (AA)
+//      TrajectorySeed::const_iterator hit = theTraj->seedRef()->recHits().first;
+//      TrajectorySeed::const_iterator hit_end = theTraj->seedRef()->recHits().second;
+        TrajectorySeed::const_iterator hit = ElSeed.recHits().first;
+        TrajectorySeed::const_iterator hit_end = ElSeed.recHits().second;
+        
+        
+        
+        for ( ; hit != hit_end; ++hit) {
+
+          if (!(hit->isValid())) continue;
+          if((*hhit)->sharesInput(&*(hit),TrackingRecHit::all))  ish++;
+
+        } // loop over gsf track rechits
+
+      } // loop over ctf track rechits
+
+
+      if ((ish>ish_max) || ((ish==ish_max) && (dr<dr_min)) ) {
+        ish_max=ish;
+        dr_min=dr;
+        iBestCtfMatch=i_ctf;
+      }
+
+      i_ctf++;
+    } // loop over ctfTracks
+
+    bool passNumHitsAndDR = ((ish_max>0) && (dr_min<=0.05));
+//    if(otherColl && (ish_max==0)) return -1; ??? (AA) -> otherColl is set to false in the call... no other appearance
+
+    // set the reference to the ctf track
+    if (iBestCtfMatch > -1 && passNumHitsAndDR) {
+      ctfTrkRef = reco::TrackRef ( ctfTrackCollection, iBestCtfMatch);
+    }
+
+  } // if no track seed
+
+   // set the matching ctf track in gsfExtra (AA)
+   (selGsfTrackExtras->back()).SetMatchedCtfTrack(ctfTrkRef);
 
     delete theTrack;
     delete theTraj;

@@ -20,6 +20,8 @@ GsfTrackProducer::GsfTrackProducer(const edm::ParameterSet& iConfig):
 		       iConfig.getParameter<bool>("useHitsSplitting")),
   theAlgo(iConfig)
 {
+  ctfTracks_ = iConfig.getParameter< edm::InputTag >("ctfTracks"); // for gsf-ctf matching (AA)
+
   setConf(iConfig);
   setSrc( iConfig.getParameter<edm::InputTag>( "src" ), iConfig.getParameter<edm::InputTag>( "beamSpot" ));
   setAlias( iConfig.getParameter<std::string>( "@module_label" ) );
@@ -67,7 +69,6 @@ void GsfTrackProducer::produce(edm::Event& theEvent, const edm::EventSetup& setu
   try{  
     edm::Handle<TrackCandidateCollection> theTCCollection;
     getFromEvt(theEvent,theTCCollection,bs);
-    
     //
     //run the algorithm  
     //
@@ -75,10 +76,22 @@ void GsfTrackProducer::produce(edm::Event& theEvent, const edm::EventSetup& setu
     theAlgo.runWithCandidate(theG.product(), theMF.product(), *theTCCollection, 
 			     theFitter.product(), thePropagator.product(), theBuilder.product(), bs, algoResults);
   } catch (cms::Exception &e){ edm::LogInfo("GsfTrackProducer") << "cms::Exception caught!!!" << "\n" << e << "\n"; throw; }
+  
+  
+  edm::Handle<reco::TrackCollection> ctfTrackCollection;
+  try {
+    theEvent.getByLabel(ctfTracks_, ctfTrackCollection);
+    LogDebug("GsfTrackProducer") << "Get the ctf tracks\n"; 
+  }
+  catch (cms::Exception &e) { edm::LogInfo("GsfTrackProducer") 
+    << "cms::Exception caught when retriving ctf tracks\n" 
+    << e << "\n"; 
+    throw;
+  }
   //
   //put everything in the event
   putInEvt(theEvent, thePropagator.product(), theMeasTk.product(), outputRHColl, outputTColl, outputTEColl, outputGsfTEColl,
-	   outputTrajectoryColl, algoResults, bs);
+	   outputTrajectoryColl, algoResults, bs, ctfTrackCollection);
   LogDebug("GsfTrackProducer") << "end" << "\n";
 }
 

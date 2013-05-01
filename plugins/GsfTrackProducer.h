@@ -20,6 +20,10 @@ public:
 private:
   TrackProducerAlgorithm<reco::GsfTrack> theAlgo;
 
+  // for matching of gsf tracks to ctf (AA)
+  edm::InputTag ctfTracks_;
+
+
 };
 
 #endif

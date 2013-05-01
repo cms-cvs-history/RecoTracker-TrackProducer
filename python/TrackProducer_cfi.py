@@ -18,10 +18,13 @@ TrackProducer = cms.EDProducer("TrackProducer",
     # true for cosmics/beam halo, false for collision tracks (needed by loopers)
     GeometricInnerState = cms.bool(False),
 
-    ### These are paremeters related to the filling of the Secondary hit-patterns                               
-    #set to "", the secondary hit pattern will not be filled (backward compatible with DetLayer=0)    
-    NavigationSchool = cms.string('SimpleNavigationSchool'),          
-    MeasurementTracker = cms.string('')                   
+    ### These are paremeters related to the filling of the Secondary hit-patterns
+    #set to "", the secondary hit pattern will not be filled (backward compatible with DetLayer=0)
+    NavigationSchool = cms.string('SimpleNavigationSchool'),
+    MeasurementTracker = cms.string(''),
+
+    # input collection of kf tracks (AA)
+    ctfTracks = cms.string('generalTracks')
 )
 
 

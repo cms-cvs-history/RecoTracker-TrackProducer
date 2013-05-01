@@ -13,7 +13,10 @@ GsfTrackRefitter = cms.EDProducer("GsfTrackRefitter",
     NavigationSchool = cms.string(''),
     MeasurementTracker = cms.string(''),
 
-    AlgorithmName = cms.string('gsf')
+    AlgorithmName = cms.string('gsf'),
+
+# input for finding a matching KF track if there is no track seed (AA)
+    inputTracks  = cms.InputTag("generalTracks")
 )
 
 

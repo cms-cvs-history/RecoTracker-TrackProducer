@@ -17,6 +17,8 @@ GsfTrackRefitter::GsfTrackRefitter(const edm::ParameterSet& iConfig):
 		       iConfig.getParameter<bool>("useHitsSplitting")),
   theAlgo(iConfig)
 {
+  ctfTracks_ = iConfig.getParameter< edm::InputTag >("ctfTracks"); // for gsf-ctf matching (AA)
+
   setConf(iConfig);
   setSrc( iConfig.getParameter<edm::InputTag>( "src" ), iConfig.getParameter<edm::InputTag>( "beamSpot" ));
   setAlias( iConfig.getParameter<std::string>( "@module_label" ) );
@@ -104,9 +106,22 @@ void GsfTrackRefitter::produce(edm::Event& theEvent, const edm::EventSetup& setu
     //default... there cannot be any other possibility due to the check in the ctor
   }
   
+  edm::Handle<reco::TrackCollection> ctfTrackCollection;
+  try {
+    theEvent.getByLabel(ctfTracks_, ctfTrackCollection);
+    LogDebug("GsfTrackProducer") << "Get the ctf tracks\n"; 
+  }
+  catch (cms::Exception &e) { edm::LogInfo("GsfTrackProducer") 
+    << "cms::Exception caught when retriving ctf tracks\n" 
+    << e << "\n"; 
+    throw;
+  }
+  
+  
   //put everything in th event
   putInEvt(theEvent, thePropagator.product(), theMeasTk.product(),
-	   outputRHColl, outputTColl, outputTEColl, outputGsfTEColl, outputTrajectoryColl, algoResults, bs);
+	   outputRHColl, outputTColl, outputTEColl, outputGsfTEColl, outputTrajectoryColl, 
+     algoResults, bs, ctfTrackCollection);
   LogDebug("GsfTrackRefitter") << "end" << "\n";
 }
 

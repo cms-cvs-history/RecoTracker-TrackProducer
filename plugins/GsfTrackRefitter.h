@@ -25,6 +25,9 @@ private:
 		    vertex };
   Constraint constraint_;
   edm::InputTag gsfTrackVtxConstraintTag_;
+
+  // for matching of gsf tracks to ctf (AA)
+  edm::InputTag ctfTracks_;
 };
 
 #endif

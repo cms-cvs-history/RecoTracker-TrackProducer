@@ -1,6 +1,6 @@
 
 //
-// $Id: FakeTrackProducers.cc,v 1.1 2012/09/12 15:59:34 gpetrucc Exp $
+// $Id: FakeTrackProducers.cc,v 1.2 2013/02/27 14:58:17 muzaffar Exp $
 //
 
 /**
@@ -8,7 +8,7 @@
   \brief    Matcher of reconstructed objects to other reconstructed objects using the tracks inside them 
             
   \author   Giovanni Petrucciani
-  \version  $Id: FakeTrackProducers.cc,v 1.1 2012/09/12 15:59:34 gpetrucc Exp $
+  \version  $Id: FakeTrackProducers.cc,v 1.2 2013/02/27 14:58:17 muzaffar Exp $
 */
 
 
@@ -105,9 +105,11 @@ FakeTrackProducer<T>::produce(edm::Event & iEvent, const edm::EventSetup & iSetu
         reco::Track::Point x(gx.x(), gx.y(), gx.z());
         reco::Track::Vector p(gp.x(), gp.y(), gp.z());
         int charge = state.localParameters().charge();
-        out->push_back(reco::Track(1.0,1.0,x,p,charge,reco::Track::CovarianceMatrix()));
+        
+        // move below and use the new constructor after inner/outer position/momentum have been calculated (AA) 
+        //out->push_back(reco::Track(1.0,1.0,x,p,charge,reco::Track::CovarianceMatrix()));
         TrajectorySeed::range hits = getHits(mu);
-        out->back().setHitPattern(hits.first, hits.second);
+        //out->back().setHitPattern(hits.first, hits.second);
         // Now Track Extra
         const TrackingRecHit *hit0 =  &*hits.first;
         const TrackingRecHit *hit1 = &*(hits.second-1);
@@ -119,10 +121,23 @@ FakeTrackProducer<T>::produce(edm::Event & iEvent, const edm::EventSetup & iSetu
         reco::Track::Point x0(gx0.x(), gx0.y(), gx0.z());
         reco::Track::Point x1(gx1.x(), gx1.y(), gx1.z());
         if (x0.R() > x1.R()) std::swap(x0,x1);
-        outEx->push_back( reco::TrackExtra(x1, p, true, x0, p, true, 
+        
+        // create the track (AA)
+        out->push_back(reco::Track(1.0,1.0,x,p,charge,reco::Track::CovarianceMatrix(), x0, p, x1, p));
+        out->back().setHitPattern(hits.first, hits.second);
+
+        
+        // use reduced extra (AA)
+//        outEx->push_back( reco::TrackExtra(x1, p, true, x0, p, true, 
+//                                reco::Track::CovarianceMatrix(), hit0->geographicalId().rawId(),
+//                                reco::Track::CovarianceMatrix(), hit1->geographicalId().rawId(),
+//                                alongMomentum) );
+        outEx->push_back( reco::TrackExtra(true, true, 
                                 reco::Track::CovarianceMatrix(), hit0->geographicalId().rawId(),
                                 reco::Track::CovarianceMatrix(), hit1->geographicalId().rawId(),
                                 alongMomentum) );
+                                
+                                
         out->back().setExtra( reco::TrackExtraRef( rTrackExtras, outEx->size()-1 ) );
         reco::TrackExtra &ex = outEx->back();    
         for (OwnVector<TrackingRecHit>::const_iterator it2 = hits.first; it2 != hits.second; ++it2) {
