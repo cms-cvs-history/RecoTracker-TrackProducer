@@ -346,6 +346,9 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
 
     for ( ; ctfTrk != ctfTracks->end(); ++ctfTrk) {
 
+      // look only at high-purity KF tracks -> MAKE THIS A CONFIG PARAMETER (AA)
+      if (!ctfTrk->qualityByName("highPurity")) continue;
+
       unsigned int ish=0;
 
       float dph= fabs(ctfTrk->phi()-track.phi()); 
