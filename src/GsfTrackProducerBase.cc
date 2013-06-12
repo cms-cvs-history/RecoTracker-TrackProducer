@@ -335,9 +335,7 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
 //  reco::ElectronSeed ElSeed(*(selTrackExtras->back().seedRef()));
   reco::ElectronSeed ElSeed(*(theTraj->seedRef()));  
   if (ElSeed.ctfTrack().isNull()) {
-//  if (theTraj->seedRef().isNull()) {
-    
-    unsigned int i_ctf = 0;
+
     int iBestCtfMatch = -1;
     unsigned int ish_max = 0;
     float dr_min = 1000;
@@ -347,7 +345,7 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
     for ( ; ctfTrk != ctfTracks->end(); ++ctfTrk) {
 
       // look only at high-purity KF tracks -> MAKE THIS A CONFIG PARAMETER (AA)
-      if (!ctfTrk->qualityByName("highPurity")) continue;
+      if (!ctfTrk->quality( reco::TrackBase::qualityByName("highPurity") ) ) continue;
 
       unsigned int ish=0;
 
@@ -363,18 +361,8 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
 
         if (!(*hhit)->isValid()) continue;
         
-//        TrajectorySeed::const_iterator hit = track.seedRef()->recHits().first;
-//        TrajectorySeed::const_iterator hit_end = track.seedRef()->recHits().second;
-      
-        // get them from the trajectory theTraj->seedRef() 
-        // or
-        // the seed, ElSeed , maybe? (AA)
-//      TrajectorySeed::const_iterator hit = theTraj->seedRef()->recHits().first;
-//      TrajectorySeed::const_iterator hit_end = theTraj->seedRef()->recHits().second;
         TrajectorySeed::const_iterator hit = ElSeed.recHits().first;
         TrajectorySeed::const_iterator hit_end = ElSeed.recHits().second;
-        
-        
         
         for ( ; hit != hit_end; ++hit) {
 
@@ -389,10 +377,9 @@ GsfTrackProducerBase::putInEvt(edm::Event& evt,
       if ((ish>ish_max) || ((ish==ish_max) && (dr<dr_min)) ) {
         ish_max=ish;
         dr_min=dr;
-        iBestCtfMatch=i_ctf;
+        iBestCtfMatch = ctfTrk - ctfTracks->begin();
       }
 
-      i_ctf++;
     } // loop over ctfTracks
 
     bool passNumHitsAndDR = ((ish_max>0) && (dr_min<=0.05));
